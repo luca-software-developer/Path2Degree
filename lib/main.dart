@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path2degree/screens/welcome.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
-  runApp(const Path2Degree());
+  initializeDateFormatting().then((_) => runApp(const Path2Degree()));
 }
 
 class Path2Degree extends StatelessWidget {

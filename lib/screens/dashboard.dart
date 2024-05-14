@@ -11,16 +11,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,72 +71,84 @@ class _DashboardState extends State<Dashboard>
       ),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
-              height: 400,
-              child: DefaultTabController(
-                length: 2,
-                child: Scaffold(
-                  appBar: PreferredSize(
-                    preferredSize: const Size.fromHeight(100),
-                    child: TabBar(
-                      isScrollable: true,
-                      labelColor: Colors.white,
-                      tabAlignment: TabAlignment.start,
-                      unselectedLabelColor: Colors.white54,
-                      indicator: const BoxDecoration(color: Colors.transparent),
-                      splashFactory: NoSplash.splashFactory,
-                      controller: _tabController,
-                      labelPadding: const EdgeInsets.symmetric(horizontal: 16),
-                      tabs: const [
-                        Tab(
-                          text: 'Questo mese',
-                        ),
-                        Tab(
-                          text: 'Questa settimana',
-                        ),
-                      ],
+            TableCalendar(
+              locale: 'it_IT',
+              firstDay: DateTime.utc(1970, 01, 01),
+              lastDay: DateTime.utc(2038, 31, 12),
+              focusedDay: DateTime.now(),
+              calendarFormat: _calendarFormat,
+              availableCalendarFormats: const {
+                CalendarFormat.month: 'Questo mese',
+                CalendarFormat.week: 'Questa settimana'
+              },
+              onFormatChanged: (format) {
+                if (_calendarFormat != format) {
+                  setState(() {
+                    _calendarFormat = format;
+                  });
+                }
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: <Widget>[
+                  Text('Promemoria automatici',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.copyWith(fontWeight: FontWeight.bold)),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Opacity(
+                      opacity: .5,
+                      child: Text('Esami entro il 30 maggio 2024',
+                          style: Theme.of(context).textTheme.bodyMedium),
                     ),
-                  ),
-                  body: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      TableCalendar(
-                        firstDay: DateTime.now()
-                            .subtract(Duration(days: DateTime.now().day - 1)),
-                        lastDay: DateTime.now()
-                            .add(Duration(days: DateTime.now().day - 1))
-                            .add(const Duration(days: 30)),
-                        focusedDay: _focusedDay,
-                        calendarFormat: _calendarFormat,
-                        selectedDayPredicate: (day) {
-                          return isSameDay(_selectedDay, day);
-                        },
-                        onDaySelected: (selectedDay, focusedDay) {
-                          if (!isSameDay(_selectedDay, selectedDay)) {
-                            setState(() {
-                              _selectedDay = selectedDay;
-                              _focusedDay = focusedDay;
-                            });
-                          }
-                        },
-                        onFormatChanged: (format) {
-                          if (_calendarFormat != format) {
-                            setState(() {
-                              _calendarFormat = format;
-                            });
-                          }
-                        },
-                        onPageChanged: (focusedDay) {
-                          _focusedDay = focusedDay;
-                        },
-                      ),
-                      const Icon(Icons.directions_transit),
-                    ],
-                  ),
-                ),
+                  )
+                ],
               ),
             ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: 3,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16.0),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.3),
+                        width: 1,
+                        style: BorderStyle.solid,
+                      ),
+                    ),
+                    child: ListTile(
+                      leading: const Icon(Icons.alarm, color: Colors.white),
+                      title: Text('Esame ${index + 1}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white)),
+                      subtitle: Opacity(
+                        opacity: .5,
+                        child: Text('12 maggio 2024 — 12:00',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(color: Colors.white)),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            )
           ],
         ),
       ),

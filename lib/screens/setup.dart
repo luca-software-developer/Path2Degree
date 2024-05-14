@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:path2degree/main.dart';
+import 'package:path2degree/screens/dashboard.dart';
 
 class Setup extends StatefulWidget {
   const Setup({super.key});
@@ -188,7 +189,7 @@ class _SetupState extends State<Setup> {
                             child: ElevatedButton(
                               onPressed: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const Setup()));
+                                    builder: (context) => const Dashboard()));
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
