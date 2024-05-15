@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:path2degree/main.dart';
+import 'package:path2degree/screens/add_diario.dart';
+import 'package:path2degree/screens/add_esame.dart';
+import 'package:path2degree/widgets/action_button.dart';
+import 'package:path2degree/widgets/expandable_fab.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Dashboard extends StatefulWidget {
@@ -16,59 +19,6 @@ class _DashboardState extends State<Dashboard>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(Path2Degree.title,
-            style: Theme.of(context).textTheme.displaySmall),
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            );
-          },
-        ),
-        actions: <Widget>[
-          Builder(
-            builder: (context) {
-              return IconButton(
-                icon: const Icon(Icons.account_circle),
-                onPressed: () {},
-              );
-            },
-          )
-        ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              child: Text(
-                Path2Degree.title,
-                style: Theme.of(context)
-                    .textTheme
-                    .displayLarge
-                    ?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
-              ),
-            ),
-            ListTile(
-              title: const Text('Item 1'),
-              onTap: () {},
-            ),
-            ListTile(
-              title: const Text('Item 2'),
-              onTap: () {},
-            ),
-          ],
-        ),
-      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,46 +61,64 @@ class _DashboardState extends State<Dashboard>
                 ],
               ),
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 3,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16.0),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
-                        width: 1,
-                        style: BorderStyle.solid,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 3,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16.0),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.3),
+                          width: 1,
+                          style: BorderStyle.solid,
+                        ),
                       ),
-                    ),
-                    child: ListTile(
-                      leading: const Icon(Icons.alarm, color: Colors.white),
-                      title: Text('Esame ${index + 1}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge
-                              ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
-                      subtitle: Opacity(
-                        opacity: .5,
-                        child: Text('12 maggio 2024 — 12:00',
+                      child: ListTile(
+                        leading: const Icon(Icons.alarm, color: Colors.white),
+                        title: Text('Esame ${index + 1}',
                             style: Theme.of(context)
                                 .textTheme
-                                .bodyMedium
-                                ?.copyWith(color: Colors.white)),
+                                .bodyLarge
+                                ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white)),
+                        subtitle: Opacity(
+                          opacity: .5,
+                          child: Text('12 maggio 2024 — 12:00',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(color: Colors.white)),
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             )
           ],
         ),
+      ),
+      floatingActionButton: ExpandableFab(
+        distance: 112,
+        children: [
+          ActionButton(
+            onPressed: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => const AddDiario())),
+            icon: const Icon(Icons.book),
+          ),
+          ActionButton(
+            onPressed: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (_) => const AddEsame())),
+            icon: const Icon(Icons.school),
+          ),
+        ],
       ),
     );
   }
