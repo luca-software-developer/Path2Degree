@@ -15,6 +15,8 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard>
     with SingleTickerProviderStateMixin {
   CalendarFormat _calendarFormat = CalendarFormat.month;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +29,28 @@ class _DashboardState extends State<Dashboard>
               locale: 'it_IT',
               firstDay: DateTime.utc(1970, 01, 01),
               lastDay: DateTime.utc(2038, 31, 12),
-              focusedDay: DateTime.now(),
+              focusedDay: _focusedDay,
               calendarFormat: _calendarFormat,
               availableCalendarFormats: const {
                 CalendarFormat.month: 'Questo mese',
                 CalendarFormat.week: 'Questa settimana'
+              },
+              calendarStyle: CalendarStyle(
+                  todayDecoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      shape: BoxShape.circle),
+                  selectedDecoration: const BoxDecoration(
+                      color: Colors.white24, shape: BoxShape.circle)),
+              selectedDayPredicate: (day) {
+                return isSameDay(_selectedDay, day);
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                if (!isSameDay(_selectedDay, selectedDay)) {
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                  });
+                }
               },
               onFormatChanged: (format) {
                 if (_calendarFormat != format) {
@@ -39,6 +58,9 @@ class _DashboardState extends State<Dashboard>
                     _calendarFormat = format;
                   });
                 }
+              },
+              onPageChanged: (focusedDay) {
+                _focusedDay = focusedDay;
               },
             ),
             Padding(
