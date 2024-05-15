@@ -1,9 +1,23 @@
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:path2degree/screens/home.dart';
 
-void main() {
+const String dbFileName = 'path2degree.db';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final database = openDatabase(
+    join(await getDatabasesPath(), dbFileName),
+    onCreate: (db, version) {
+      return db.execute(
+        'CREATE TABLE dogs(id INTEGER PRIMARY KEY, name TEXT, age INTEGER)',
+      );
+    },
+    version: 1,
+  );
   initializeDateFormatting().then((_) => runApp(const Path2Degree()));
 }
 
