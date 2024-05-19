@@ -1,6 +1,4 @@
 import 'package:path2degree/model/tipologia.dart';
-import 'package:path2degree/model/diario.dart';
-import 'package:path2degree/model/categoria.dart';
 
 class Esame {
   final String nome;
@@ -10,10 +8,9 @@ class Esame {
   final String luogo;
   final Tipologia tipologia;
   final String docente;
-  final int voto;
-  final bool lode;
-  final List<Categoria> categorie;
-  final Diario diario;
+  final int? voto;
+  final bool? lode;
+  final String diario;
 
   const Esame({
     required this.nome,
@@ -23,46 +20,56 @@ class Esame {
     required this.luogo,
     required this.tipologia,
     required this.docente,
-    required this.voto,
-    required this.lode,
-    required this.categorie,
+    this.voto,
+    this.lode,
     required this.diario,
   });
 
-  factory Esame.fromMap(Map<String, dynamic> map) {
+  static Esame fromMap(Map<String, dynamic> map) {
     return Esame(
       nome: map['nome'] as String,
-      corsoDiStudi: map['corsoDiStudi'] as String,
+      corsoDiStudi: map['corsodistudi'] as String,
       cfu: map['cfu'] as int,
-      dataOra: DateTime.parse(map['dataOra'] as String),
+      dataOra: DateTime.parse(map['dataora'] as String),
       luogo: map['luogo'] as String,
-      tipologia: map['tipologia'] as Tipologia,
+      tipologia: _tipologiaFromString(map['tipologia'] as String),
       docente: map['docente'] as String,
-      voto: map['voto'] as int,
-      lode: map['lode'] as bool,
-      categorie: map['categorie'] as List<Categoria>,
-      diario: map['diario'] as Diario,
+      voto: map['voto'] as int?,
+      lode: (map['lode'] as int?) == 1,
+      diario: map['diario'] as String,
     );
+  }
+
+  static Tipologia _tipologiaFromString(String tipologiaAsString) {
+    switch (tipologiaAsString) {
+      case 'scritto':
+        return Tipologia.scritto;
+      case 'orale':
+        return Tipologia.orale;
+      case 'scrittoOrale':
+        return Tipologia.scrittoOrale;
+      default:
+        throw Exception('$tipologiaAsString non è una tipologia.');
+    }
   }
 
   Map<String, dynamic> toMap() {
     return {
       'nome': nome,
-      'corsoDiStudi': corsoDiStudi,
+      'corsodistudi': corsoDiStudi,
       'cfu': cfu,
-      'dataOra': dataOra,
+      'dataora': dataOra,
       'luogo': luogo,
       'tipologia': tipologia,
       'docente': docente,
       'voto': voto,
       'lode': lode,
-      'categorie': categorie,
       'diario': diario,
     };
   }
 
   @override
   String toString() {
-    return 'Esame { nome: $nome, corsoDiStudi: $corsoDiStudi, cfu: $cfu, dataOra: $dataOra, luogo: $luogo, tipologia: $tipologia, docente: $docente, voto: $voto, lode: $lode, diario: $diario, categorie: $categorie }';
+    return 'Esame { nome: $nome, corsoDiStudi: $corsoDiStudi, cfu: $cfu, dataOra: $dataOra, luogo: $luogo, tipologia: $tipologia, docente: $docente, voto: $voto, lode: $lode, diario: $diario }';
   }
 }

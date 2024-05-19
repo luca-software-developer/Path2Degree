@@ -2,7 +2,7 @@ class Diario {
   final String nome;
   final String testo;
 
-  const Diario({required this.nome, required this.testo});
+  const Diario({required this.nome, this.testo = ''});
 
   Map<String, Object?> toMap() {
     return {'nome': nome, 'testo': testo};
@@ -14,6 +14,6 @@ class Diario {
 
   @override
   String toString() {
-    return 'Luogo { nome: $nome, testo: $testo }';
+    return 'Diario { nome: $nome, testo: $testo }';
   }
 }
