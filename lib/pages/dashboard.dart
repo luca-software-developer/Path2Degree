@@ -122,6 +122,9 @@ class _DashboardState extends State<Dashboard>
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              const SizedBox(
+                                height: 8.0,
+                              ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16.0),
