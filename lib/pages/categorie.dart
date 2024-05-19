@@ -61,36 +61,44 @@ class _CategorieState extends State<Categorie> {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16.0),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.3),
-                                  width: 1,
-                                  style: BorderStyle.solid,
-                                ),
-                              ),
-                              child: ListTile(
-                                  leading: const Icon(Icons.category_rounded,
-                                      color: Colors.white),
-                                  title: Text(snapshot.data![index].nome,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white))),
+                      child: snapshot.data!.isEmpty
+                          ? const Center(
+                              child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 16.0),
+                              child: Text('Nessun elemento'),
+                            ))
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16.0),
+                                      border: Border.all(
+                                        color: Colors.white.withOpacity(0.3),
+                                        width: 1,
+                                        style: BorderStyle.solid,
+                                      ),
+                                    ),
+                                    child: ListTile(
+                                        leading: const Icon(
+                                            Icons.category_rounded,
+                                            color: Colors.white),
+                                        title: Text(snapshot.data![index].nome,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge
+                                                ?.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white))),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
                     ),
                     const SizedBox(
                       height: 8.0,

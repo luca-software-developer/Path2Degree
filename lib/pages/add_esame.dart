@@ -608,17 +608,18 @@ class _AddEsameState extends State<AddEsame> {
                                       child: const Text('Aggiungi'),
                                       onPressed: () async {
                                         Navigator.of(context).pop();
-                                        final diario = Diario(
+                                        final newDiario = Diario(
                                             nome: _nuovoDiario!, testo: '');
                                         Database db =
                                             await databaseProvider.database;
                                         await db.insert(
                                           'diario',
-                                          diario.toMap(),
+                                          newDiario.toMap(),
                                           conflictAlgorithm:
                                               ConflictAlgorithm.replace,
                                         );
                                         _diario = _nuovoDiario;
+                                        diario = newDiario;
                                         setState(() {});
                                       },
                                     ),

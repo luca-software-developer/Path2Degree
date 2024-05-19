@@ -144,49 +144,62 @@ class _DashboardState extends State<Dashboard>
                                           .bodyMedium),
                                 ),
                               ),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: esamiPromemoria.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        16, 16, 16, 0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(16.0),
-                                        border: Border.all(
-                                          color: Colors.white.withOpacity(0.3),
-                                          width: 1,
-                                          style: BorderStyle.solid,
-                                        ),
-                                      ),
-                                      child: ListTile(
-                                        leading: const Icon(Icons.alarm_rounded,
-                                            color: Colors.white),
-                                        title: Text(esamiPromemoria[index].nome,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge
-                                                ?.copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white)),
-                                        subtitle: Opacity(
-                                          opacity: .5,
-                                          child: Text(
-                                              '${DateFormat('dd/MM/yyyy').format(esamiPromemoria[index].dataOra)} — ${DateFormat('HH:mm').format(esamiPromemoria[index].dataOra)}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium
-                                                  ?.copyWith(
-                                                      color: Colors.white)),
-                                        ),
-                                      ),
+                              (snapshot.data ?? []).isEmpty
+                                  ? const Center(
+                                      child: Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 16.0),
+                                      child: Text('Nessun elemento'),
+                                    ))
+                                  : ListView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: esamiPromemoria.length,
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              16, 16, 16, 0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(16.0),
+                                              border: Border.all(
+                                                color: Colors.white
+                                                    .withOpacity(0.3),
+                                                width: 1,
+                                                style: BorderStyle.solid,
+                                              ),
+                                            ),
+                                            child: ListTile(
+                                              leading: const Icon(
+                                                  Icons.alarm_rounded,
+                                                  color: Colors.white),
+                                              title: Text(
+                                                  esamiPromemoria[index].nome,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyLarge
+                                                      ?.copyWith(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white)),
+                                              subtitle: Opacity(
+                                                opacity: .5,
+                                                child: Text(
+                                                    '${DateFormat('dd/MM/yyyy').format(esamiPromemoria[index].dataOra)} — ${DateFormat('HH:mm').format(esamiPromemoria[index].dataOra)}',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium
+                                                        ?.copyWith(
+                                                            color:
+                                                                Colors.white)),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     ),
-                                  );
-                                },
-                              ),
                               const SizedBox(
                                 height: 80.0,
                               )

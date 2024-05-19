@@ -759,7 +759,7 @@ class _EditEsameState extends State<EditEsame> {
                                               child: const Text('Aggiungi'),
                                               onPressed: () async {
                                                 Navigator.of(context).pop();
-                                                final diario = Diario(
+                                                final newDiario = Diario(
                                                     nome: _nuovoDiario!,
                                                     testo: '');
                                                 Database db =
@@ -767,11 +767,12 @@ class _EditEsameState extends State<EditEsame> {
                                                         .database;
                                                 await db.insert(
                                                   'diario',
-                                                  diario.toMap(),
+                                                  newDiario.toMap(),
                                                   conflictAlgorithm:
                                                       ConflictAlgorithm.replace,
                                                 );
                                                 _diario = _nuovoDiario;
+                                                diario = _diario;
                                                 setState(() {});
                                               },
                                             ),
