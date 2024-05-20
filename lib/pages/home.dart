@@ -76,13 +76,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ),
       ),
       drawer: Drawer(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
+                color: Theme.of(context).colorScheme.surface,
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -108,8 +108,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           .textTheme
                           .displayMedium
                           ?.copyWith(
-                              color:
-                                  Theme.of(context).colorScheme.onBackground),
+                              color: Theme.of(context).colorScheme.onSurface),
                     ),
                   ],
                 ),
@@ -123,7 +122,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 style: TextStyle(
                     color: Theme.of(context)
                         .colorScheme
-                        .onBackground
+                        .onSurface
                         .withOpacity(0.7)),
               ),
             ),
@@ -186,7 +185,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 style: TextStyle(
                     color: Theme.of(context)
                         .colorScheme
-                        .onBackground
+                        .onSurface
                         .withOpacity(0.7)),
               ),
             ),
@@ -250,7 +249,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ),
         ],
         currentIndex: _selectedIndex,
-        unselectedItemColor: Theme.of(context).colorScheme.onBackground,
+        unselectedItemColor: Theme.of(context).colorScheme.onSurface,
         selectedItemColor: Theme.of(context).colorScheme.primary,
         onTap: _onItemTapped,
       ),

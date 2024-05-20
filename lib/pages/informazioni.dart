@@ -45,7 +45,7 @@ class _InformazioniState extends State<Informazioni> {
               style: Theme.of(context)
                   .textTheme
                   .displayMedium
-                  ?.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -55,7 +55,7 @@ class _InformazioniState extends State<Informazioni> {
                       fontStyle: FontStyle.italic,
                       color: Theme.of(context)
                           .colorScheme
-                          .onBackground
+                          .onSurface
                           .withOpacity(0.7),
                     ),
                 textAlign: TextAlign.center,

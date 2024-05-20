@@ -84,7 +84,7 @@ class _DashboardState extends State<Dashboard>
                         selectedDecoration: const BoxDecoration(
                             color: Colors.white24, shape: BoxShape.circle),
                         markerDecoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.onBackground,
+                            color: Theme.of(context).colorScheme.onSurface,
                             shape: BoxShape.circle),
                       ),
                       selectedDayPredicate: (day) {
