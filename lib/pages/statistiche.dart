@@ -148,6 +148,9 @@ class _StatisticheState extends State<Statistiche> {
     List<int> voti = [];
     List<double> evoluzioneMedia = [];
     for (final row in rows) {
+      if (row['voto'] == null) {
+        continue;
+      }
       voti.add(row['voto'] as int);
       double media = 0;
       for (final voto in voti) {
@@ -168,6 +171,9 @@ class _StatisticheState extends State<Statistiche> {
     List<int> voti = [];
     List<double> evoluzioneVotoMassimo = [];
     for (final row in rows) {
+      if (row['voto'] == null) {
+        continue;
+      }
       voti.add(row['voto'] as int);
       evoluzioneVotoMassimo.add(voti.reduce(max).toDouble());
     }
@@ -183,6 +189,9 @@ class _StatisticheState extends State<Statistiche> {
     List<int> voti = [];
     List<double> evoluzioneVotoMinimo = [];
     for (final row in rows) {
+      if (row['voto'] == null) {
+        continue;
+      }
       voti.add(row['voto'] as int);
       evoluzioneVotoMinimo.add(voti.reduce(min).toDouble());
     }
