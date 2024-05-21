@@ -32,7 +32,7 @@ class _InformazioniState extends State<Informazioni> {
                       SizedBox(
                         width: 256,
                         child: Image.asset(
-                          'assets/icons/icon.png',
+                          'assets/images/icon.png',
                         ),
                       )
                     ],

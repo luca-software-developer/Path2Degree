@@ -70,7 +70,7 @@ flutter:
   assets:
     - assets/
     - assets/databases/
-    - assets/icons/
+    - assets/images/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -100,22 +100,25 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
 
 flutter_launcher_icons:
+  image_path_android: "assets/images/icon-android.png"
+  image_path_ios: "assets/images/icon-ios.png"
   android: "launcher_icon"
-  ios: true
-  image_path: "assets/icons/icon.png"
   min_sdk_android: 21
+  ios: true
+  remove_alpha_ios: true
+  background_color_ios: "#ffffff"
   web:
     generate: true
-    image_path: "assets/icons/icon.png"
+    image_path: "assets/images/icon.png"
     background_color: "#121212"
     theme_color: "#121212"
   windows:
     generate: true
-    image_path: "assets/icons/icon.png"
+    image_path: "assets/images/icon.png"
     icon_size: 48
   macos:
     generate: true
-    image_path: "assets/icons/icon.png"
+    image_path: "assets/images/icon.png"
 
 flutter_native_splash:
   color: "#121212"

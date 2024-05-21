@@ -96,7 +96,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           return Transform.rotate(
                             angle: _controller.value * 2 * pi,
                             child: Image.asset(
-                              'assets/icons/icon.png',
+                              'assets/images/icon.png',
                             ),
                           );
                         },
