@@ -225,33 +225,41 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ),
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.category_rounded),
-            label: 'Categorie',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.area_chart_rounded),
-            label: 'Statistiche',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book_rounded),
-            label: 'Diari',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school_rounded),
-            label: 'Esami',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        unselectedItemColor: Theme.of(context).colorScheme.onSurface,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        onTap: _onItemTapped,
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          splashColor: Colors.transparent,
+          splashFactory: NoSplash.splashFactory,
+        ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.category_rounded),
+              label: 'Categorie',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.area_chart_rounded),
+              label: 'Statistiche',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_rounded),
+              label: 'Dashboard',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.book_rounded),
+              label: 'Diari',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.school_rounded),
+              label: 'Esami',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          unselectedItemColor: Theme.of(context).colorScheme.onSurface,
+          selectedItemColor: Theme.of(context).colorScheme.primary,
+          showUnselectedLabels: true,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }

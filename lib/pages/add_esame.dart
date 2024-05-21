@@ -359,6 +359,7 @@ class _AddEsameState extends State<AddEsame> {
                                       lode = true;
                                     } else {
                                       voto = int.parse(newValue);
+                                      lode = false;
                                     }
                                   },
                                   decoration: const InputDecoration(

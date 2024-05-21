@@ -5,7 +5,7 @@
             "name": "Path2Degree",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            //  "flutterMode": "release"
         }
     ]
 }

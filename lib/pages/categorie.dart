@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:path2degree/model/diario.dart';
+import 'package:path2degree/model/categoria.dart';
 import 'package:path2degree/providers/database_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -11,13 +11,11 @@ class Categorie extends StatefulWidget {
 }
 
 class _CategorieState extends State<Categorie> {
-  Future<List<Diario>> _getCategorie() async {
+  Future<List<Categoria>> _getCategorie() async {
     final provider = Provider.of<DatabaseProvider>(context, listen: false);
     final database = await provider.database;
     final rows = await database.query('categoria');
-    return rows
-        .map((row) => Diario(nome: row['nome'] as String, testo: ''))
-        .toList();
+    return rows.map((row) => Categoria(nome: row['nome'] as String)).toList();
   }
 
   @override

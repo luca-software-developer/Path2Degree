@@ -433,6 +433,7 @@ class _EditEsameState extends State<EditEsame> {
                                             lode = true;
                                           } else {
                                             voto = int.parse(newValue);
+                                            lode = false;
                                           }
                                         },
                                         decoration: const InputDecoration(
