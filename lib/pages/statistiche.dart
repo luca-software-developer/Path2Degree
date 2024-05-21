@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path2degree/model/categoria.dart';
 import 'package:path2degree/model/esame.dart';
 import 'package:path2degree/providers/database_provider.dart';
+import 'package:path2degree/utils/chart_colors.dart';
+import 'package:path2degree/widgets/chart.dart';
 import 'package:provider/provider.dart';
 
 class Statistiche extends StatefulWidget {
@@ -131,8 +135,58 @@ class _StatisticheState extends State<Statistiche> {
   Future<List<Categoria>> _getCategorie() async {
     final provider = Provider.of<DatabaseProvider>(context, listen: false);
     final database = await provider.database;
-    final rows = await database.query('categoria');
+    final rows = await database.query('categoria', orderBy: 'nome');
     return rows.map((row) => Categoria(nome: row['nome'] as String)).toList();
+  }
+
+  Future<List<double>> _getEvoluzioneMediaPerCategoria(
+      Categoria categoria) async {
+    final provider = Provider.of<DatabaseProvider>(context, listen: false);
+    final database = await provider.database;
+    final rows = await database.rawQuery(
+        "SELECT * FROM esame AS E WHERE EXISTS (SELECT * FROM appartenenza AS A WHERE E.nome = A.esame AND A.categoria = '${categoria.nome}') ORDER BY E.dataOra");
+    List<int> voti = [];
+    List<double> evoluzioneMedia = [];
+    for (final row in rows) {
+      voti.add(row['voto'] as int);
+      double media = 0;
+      for (final voto in voti) {
+        media += voto;
+      }
+      media /= voti.length;
+      evoluzioneMedia.add(media);
+    }
+    return evoluzioneMedia;
+  }
+
+  Future<List<double>> _getEvoluzioneVotoMassimoPerCategoria(
+      Categoria categoria) async {
+    final provider = Provider.of<DatabaseProvider>(context, listen: false);
+    final database = await provider.database;
+    final rows = await database.rawQuery(
+        "SELECT * FROM esame AS E WHERE EXISTS (SELECT * FROM appartenenza AS A WHERE E.nome = A.esame AND A.categoria = '${categoria.nome}') ORDER BY E.dataOra");
+    List<int> voti = [];
+    List<double> evoluzioneVotoMassimo = [];
+    for (final row in rows) {
+      voti.add(row['voto'] as int);
+      evoluzioneVotoMassimo.add(voti.reduce(max).toDouble());
+    }
+    return evoluzioneVotoMassimo;
+  }
+
+  Future<List<double>> _getEvoluzioneVotoMinimoPerCategoria(
+      Categoria categoria) async {
+    final provider = Provider.of<DatabaseProvider>(context, listen: false);
+    final database = await provider.database;
+    final rows = await database.rawQuery(
+        "SELECT * FROM esame AS E WHERE EXISTS (SELECT * FROM appartenenza AS A WHERE E.nome = A.esame AND A.categoria = '${categoria.nome}') ORDER BY E.dataOra");
+    List<int> voti = [];
+    List<double> evoluzioneVotoMinimo = [];
+    for (final row in rows) {
+      voti.add(row['voto'] as int);
+      evoluzioneVotoMinimo.add(voti.reduce(min).toDouble());
+    }
+    return evoluzioneVotoMinimo;
   }
 
   @override
@@ -167,7 +221,7 @@ class _StatisticheState extends State<Statistiche> {
             indicator: const BoxDecoration(),
             tabs: const [
               Tab(
-                text: 'At a glance',
+                text: 'A colpo d\'occhio',
               ),
               Tab(
                 text: 'Grafici per categoria',
@@ -736,48 +790,185 @@ class _StatisticheState extends State<Statistiche> {
               ),
             ),
             SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Form(
+                    key: _formKey,
+                    child: Column(
                       children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: DropdownButtonFormField<Categoria>(
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Specificare la categoria.';
-                                  }
-                                  return null;
-                                },
-                                value: _categoria,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Categoria',
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: DropdownButtonFormField<Categoria>(
+                                    validator: (value) {
+                                      if (value == null) {
+                                        return 'Specificare la categoria.';
+                                      }
+                                      return null;
+                                    },
+                                    value: _categoria,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Categoria',
+                                    ),
+                                    onChanged: (Categoria? newValue) {
+                                      setState(() {
+                                        _categoria = newValue!;
+                                      });
+                                    },
+                                    items: _categorie.map((value) {
+                                      return DropdownMenuItem<Categoria>(
+                                        value: value,
+                                        child: Text(value.nome),
+                                      );
+                                    }).toList(),
+                                  ),
                                 ),
-                                onChanged: (Categoria? newValue) {
-                                  setState(() {
-                                    _categoria = newValue!;
-                                  });
-                                },
-                                items: _categorie.map((value) {
-                                  return DropdownMenuItem<Categoria>(
-                                    value: value,
-                                    child: Text(value.nome),
-                                  );
-                                }).toList(),
                               ),
-                            ),
-                          ),
-                        )
+                            )
+                          ],
+                        ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                  _categoria == null
+                      ? Container()
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Text('Evoluzione della media',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(fontWeight: FontWeight.bold)),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Opacity(
+                                opacity: .5,
+                                child: Text(
+                                    'Stai migliorando in \'${_categoria?.nome}\'?',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium),
+                              ),
+                            ),
+
+                            //
+
+                            FutureBuilder(
+                                future: _getEvoluzioneMediaPerCategoria(
+                                    _categoria!),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    return Text(snapshot.error.toString());
+                                  } else {
+                                    return Chart(
+                                      voti: snapshot.data ?? [],
+                                      colors: const [
+                                        ChartColors.contentColorCyan,
+                                        ChartColors.contentColorBlue,
+                                      ],
+                                    );
+                                  }
+                                }),
+
+                            //
+
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Text('Voto massimo per la categoria',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(fontWeight: FontWeight.bold)),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Opacity(
+                                opacity: .5,
+                                child: Text(
+                                    'I tuoi record in \'${_categoria?.nome}\'',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium),
+                              ),
+                            ),
+
+                            //
+
+                            FutureBuilder(
+                                future: _getEvoluzioneVotoMassimoPerCategoria(
+                                    _categoria!),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    return Text(snapshot.error.toString());
+                                  } else {
+                                    return Chart(
+                                      voti: snapshot.data ?? [],
+                                      colors: const [
+                                        ChartColors.contentColorCyan,
+                                        ChartColors.contentColorGreen,
+                                      ],
+                                    );
+                                  }
+                                }),
+
+                            //
+
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Text('Voto minimo per la categoria',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(fontWeight: FontWeight.bold)),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Opacity(
+                                opacity: .5,
+                                child: Text(
+                                    'Stiamo andando nella direzione giusta?',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium),
+                              ),
+                            ),
+
+                            //
+
+                            FutureBuilder(
+                                future: _getEvoluzioneVotoMinimoPerCategoria(
+                                    _categoria!),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    return Text(snapshot.error.toString());
+                                  } else {
+                                    return Chart(
+                                      voti: snapshot.data ?? [],
+                                      colors: const [
+                                        ChartColors.contentColorYellow,
+                                        ChartColors.contentColorOrange,
+                                      ],
+                                    );
+                                  }
+                                }),
+
+                            //
+                          ],
+                        ),
+                ],
               ),
             ),
           ]),

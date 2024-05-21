@@ -44,6 +44,7 @@ dependencies:
   flutter_native_splash: ^2.4.0
   share_plus: ^4.4.0
   shared_preferences: ^2.2.3
+  fl_chart: ^0.68.0
 
 dev_dependencies:
   flutter_test:
