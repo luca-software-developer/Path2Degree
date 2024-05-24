@@ -761,8 +761,7 @@ class _EditEsameState extends State<EditEsame> {
                                               onPressed: () async {
                                                 Navigator.of(context).pop();
                                                 final newDiario = Diario(
-                                                    nome: _nuovoDiario!,
-                                                    testo: '');
+                                                    nome: _nuovoDiario!);
                                                 Database db =
                                                     await databaseProvider
                                                         .database;

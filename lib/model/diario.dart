@@ -1,19 +1,18 @@
 class Diario {
   final String nome;
-  final String testo;
 
-  const Diario({required this.nome, this.testo = ''});
+  const Diario({required this.nome});
 
   Map<String, Object?> toMap() {
-    return {'nome': nome, 'testo': testo};
+    return {'nome': nome};
   }
 
   factory Diario.fromMap(Map<String, Object?> map) {
-    return Diario(nome: map['nome'] as String, testo: map['testo'] as String);
+    return Diario(nome: map['nome'] as String);
   }
 
   @override
   String toString() {
-    return 'Diario { nome: $nome, testo: $testo }';
+    return 'Diario { nome: $nome }';
   }
 }

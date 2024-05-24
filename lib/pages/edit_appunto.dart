@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:path2degree/providers/database_provider.dart';
 import 'package:provider/provider.dart';
 
-class EditDiario extends StatefulWidget {
-  const EditDiario({super.key, required this.nome});
+class EditAppunto extends StatefulWidget {
+  const EditAppunto({super.key, required this.nome});
 
   final String nome;
 
   @override
-  State<EditDiario> createState() => _EditDiarioState();
+  State<EditAppunto> createState() => _EditAppuntoState();
 }
 
-class _EditDiarioState extends State<EditDiario> {
+class _EditAppuntoState extends State<EditAppunto> {
   final _controller = TextEditingController();
 
   Future<String> _getTesto() async {
     final provider = Provider.of<DatabaseProvider>(context, listen: false);
     final database = await provider.database;
     final rows =
-        await database.query('diario', where: "nome = '${widget.nome}'");
+        await database.query('appunto', where: "nome = '${widget.nome}'");
     return rows[0]['testo'] as String;
   }
 
@@ -77,7 +77,7 @@ class _EditDiarioState extends State<EditDiario> {
                                       .database
                                       .then((database) {
                                     database
-                                        .update('diario',
+                                        .update('appunto',
                                             {'testo': _controller.text},
                                             where: "nome = '${widget.nome}'")
                                         .then(
