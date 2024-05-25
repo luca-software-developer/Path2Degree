@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path2degree/model/esame.dart';
-import 'package:path2degree/pages/add_esame.dart';
-import 'package:path2degree/pages/edit_esame.dart';
+import 'package:path2degree/pages/add_pages/add_esame.dart';
+import 'package:path2degree/pages/edit_pages/edit_esame.dart';
 import 'package:path2degree/providers/database_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +15,13 @@ class Esami extends StatefulWidget {
 
 class _EsamiState extends State<Esami> {
   final _controller = TextEditingController();
+
+  Future<List<Esame>> _getEsami() async {
+    final provider = Provider.of<DatabaseProvider>(context, listen: false);
+    final database = await provider.database;
+    final rows = await database.query('esame');
+    return rows.map((row) => Esame.fromMap(row)).toList();
+  }
 
   Future<List<Esame>> _getEsamiInCorso() async {
     final provider = Provider.of<DatabaseProvider>(context, listen: false);
@@ -65,14 +72,7 @@ class _EsamiState extends State<Esami> {
                   future: _getEsamiInCorso(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CircularProgressIndicator(),
-                          ],
-                        ),
-                      );
+                      return Container();
                     } else if (snapshot.hasError) {
                       return Text(snapshot.error.toString());
                     } else {
@@ -138,12 +138,16 @@ class _EsamiState extends State<Esami> {
                                                   IconButton(
                                                       onPressed: () => Navigator
                                                               .of(context)
-                                                          .push(MaterialPageRoute(
-                                                              builder: (_) => EditEsame(
-                                                                  nome: snapshot
-                                                                      .data![
-                                                                          index]
-                                                                      .nome))),
+                                                          .push(
+                                                              MaterialPageRoute(
+                                                                  builder: (_) =>
+                                                                      EditEsame(
+                                                                        nome: snapshot
+                                                                            .data![index]
+                                                                            .nome,
+                                                                        esami: snapshot
+                                                                            .data!,
+                                                                      ))),
                                                       icon: const Icon(
                                                           Icons.edit_rounded)),
                                                   IconButton(
@@ -230,14 +234,7 @@ class _EsamiState extends State<Esami> {
                   future: _getEsamiSuperati(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CircularProgressIndicator(),
-                          ],
-                        ),
-                      );
+                      return Container();
                     } else if (snapshot.hasError) {
                       return Text(snapshot.error.toString());
                     } else {
@@ -303,12 +300,16 @@ class _EsamiState extends State<Esami> {
                                                   IconButton(
                                                       onPressed: () => Navigator
                                                               .of(context)
-                                                          .push(MaterialPageRoute(
-                                                              builder: (_) => EditEsame(
-                                                                  nome: snapshot
-                                                                      .data![
-                                                                          index]
-                                                                      .nome))),
+                                                          .push(
+                                                              MaterialPageRoute(
+                                                                  builder: (_) =>
+                                                                      EditEsame(
+                                                                        nome: snapshot
+                                                                            .data![index]
+                                                                            .nome,
+                                                                        esami: snapshot
+                                                                            .data!,
+                                                                      ))),
                                                       icon: const Icon(
                                                           Icons.edit_rounded)),
                                                   IconButton(
@@ -382,7 +383,19 @@ class _EsamiState extends State<Esami> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => const AddEsame()))
+            .push(MaterialPageRoute(
+              builder: (_) => FutureBuilder(
+                  future: _getEsami(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container();
+                    } else if (snapshot.hasError) {
+                      return Text(snapshot.error.toString());
+                    } else {
+                      return AddEsame(esami: snapshot.data!);
+                    }
+                  }),
+            ))
             .then((_) => setState(() {})),
         child: const Icon(Icons.add_rounded),
       ),

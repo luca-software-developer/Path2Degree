@@ -5,8 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class AddAppunto extends StatefulWidget {
-  const AddAppunto({super.key, required this.diario});
+  const AddAppunto({super.key, required this.diario, required this.appunti});
+
   final String diario;
+  final List<Appunto> appunti;
 
   @override
   State<AddAppunto> createState() => _AddAppuntoState();
@@ -65,6 +67,12 @@ class _AddAppuntoState extends State<AddAppunto> {
                               validator: (value) {
                                 if (value!.trim().isEmpty) {
                                   return 'Specificare un nome valido.';
+                                } else if (widget.appunti
+                                    .map((appunto) => appunto.nome)
+                                    .where(
+                                        (nomeAppunto) => nomeAppunto != _nome)
+                                    .contains(value.trim())) {
+                                  return 'Esiste già un appunto con questo nome.';
                                 }
                                 return null;
                               },
@@ -98,7 +106,11 @@ class _AddAppuntoState extends State<AddAppunto> {
                                   database
                                       .insert(
                                         'appunto',
-                                        Appunto(nome: _nome!, testo:'', diario: widget.diario).toMap(),
+                                        Appunto(
+                                                nome: _nome!,
+                                                testo: '',
+                                                diario: widget.diario)
+                                            .toMap(),
                                         conflictAlgorithm:
                                             ConflictAlgorithm.replace,
                                       )

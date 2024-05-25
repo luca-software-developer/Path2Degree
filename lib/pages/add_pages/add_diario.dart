@@ -1,38 +1,28 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:path2degree/model/risorsa.dart';
+import 'package:path2degree/model/diario.dart';
 import 'package:path2degree/providers/database_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart' as path;
 
-class AddRisorsa extends StatefulWidget {
-  const AddRisorsa({super.key, required this.diario});
-  final String diario;
+class AddDiario extends StatefulWidget {
+  const AddDiario({super.key, required this.diari});
+
+  final List<Diario> diari;
 
   @override
-  State<AddRisorsa> createState() => _AddRisorsaState();
+  State<AddDiario> createState() => _AddDiarioState();
 }
 
-class _AddRisorsaState extends State<AddRisorsa> {
+class _AddDiarioState extends State<AddDiario> {
   final _formKey = GlobalKey<FormState>();
   String? _nome;
-  String? _path;
-
-  Future<String?> _getPathRisorsa() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-    if (result != null) {
-      return result.files.single.path;
-    }
-    return null;
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Aggiungi Risorsa',
+        title: Text('Aggiungi Diario',
             style: Theme.of(context).textTheme.displaySmall),
       ),
       body: SingleChildScrollView(
@@ -53,7 +43,7 @@ class _AddRisorsaState extends State<AddRisorsa> {
                             ?.copyWith(fontWeight: FontWeight.bold)),
                     Opacity(
                       opacity: .5,
-                      child: Text('Che nome vogliamo dare a questa risorsa?',
+                      child: Text('Che nome vogliamo dare a questo diario?',
                           style: Theme.of(context).textTheme.bodyMedium),
                     ),
                   ],
@@ -72,78 +62,21 @@ class _AddRisorsaState extends State<AddRisorsa> {
                             child: TextFormField(
                               decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
-                                  labelText: 'Nome della risorsa'),
+                                  labelText: 'Nome del diario'),
                               validator: (value) {
                                 if (value!.trim().isEmpty) {
                                   return 'Specificare un nome valido.';
+                                } else if (widget.diari
+                                    .map((diario) => diario.nome)
+                                    .where((nomeDiario) => nomeDiario != _nome)
+                                    .contains(value.trim())) {
+                                  return 'Esiste già un diario con questo nome.';
                                 }
                                 return null;
                               },
                               onSaved: (newValue) => _nome = newValue!.trim(),
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Scegli un file',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.copyWith(fontWeight: FontWeight.bold)),
-                    Opacity(
-                      opacity: .5,
-                      child: Text('Seleziona il file della risorsa.',
-                          style: Theme.of(context).textTheme.bodyMedium),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Text(_path != null
-                                ? path.basename(_path!)
-                                : 'Nessun file selezionato'),
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-                child: Column(
-                  children: [
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: ElevatedButton(
-                                child: const Text('Scegli risorsa'),
-                                onPressed: () async {
-                                  _path = await _getPathRisorsa();
-                                  setState(() {});
-                                },
-                              )),
                         )
                       ],
                     ),
@@ -170,12 +103,8 @@ class _AddRisorsaState extends State<AddRisorsa> {
                                     .then((database) {
                                   database
                                       .insert(
-                                        'risorsa',
-                                        Risorsa(
-                                                nome: _nome!,
-                                                path: _path!,
-                                                diario: widget.diario)
-                                            .toMap(),
+                                        'diario',
+                                        Diario(nome: _nome!).toMap(),
                                         conflictAlgorithm:
                                             ConflictAlgorithm.replace,
                                       )
@@ -188,7 +117,7 @@ class _AddRisorsaState extends State<AddRisorsa> {
                                     Theme.of(context).colorScheme.onSecondary,
                                 backgroundColor:
                                     Theme.of(context).colorScheme.primary),
-                            child: const Text('Aggiungi risorsa')),
+                            child: const Text('Aggiungi diario')),
                       ),
                     )
                   ],

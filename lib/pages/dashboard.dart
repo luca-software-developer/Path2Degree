@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:path2degree/model/diario.dart';
 import 'package:path2degree/model/esame.dart';
-import 'package:path2degree/pages/add_diario.dart';
-import 'package:path2degree/pages/add_esame.dart';
+import 'package:path2degree/pages/add_pages/add_diario.dart';
+import 'package:path2degree/pages/add_pages/add_esame.dart';
 import 'package:path2degree/providers/database_provider.dart';
 import 'package:path2degree/providers/shared_preferences_provider.dart';
 import 'package:path2degree/widgets/action_button.dart';
@@ -23,6 +24,20 @@ class _DashboardState extends State<Dashboard>
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   List<Esame> esamiPromemoria = [];
+
+  Future<List<Diario>> _getDiari() async {
+    final provider = Provider.of<DatabaseProvider>(context, listen: false);
+    final database = await provider.database;
+    final rows = await database.query('diario');
+    return rows.map((row) => Diario(nome: row['nome'] as String)).toList();
+  }
+
+  Future<List<Esame>> _getEsami() async {
+    final provider = Provider.of<DatabaseProvider>(context, listen: false);
+    final database = await provider.database;
+    final rows = await database.query('esame');
+    return rows.map((row) => Esame.fromMap(row)).toList();
+  }
 
   Future<List<Esame>> _getEsamiInCorso() async {
     final provider = Provider.of<DatabaseProvider>(context, listen: false);
@@ -218,13 +233,39 @@ class _DashboardState extends State<Dashboard>
                 distance: 112,
                 children: [
                   ActionButton(
-                    onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const AddDiario())),
+                    onPressed: () =>
+                        Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => FutureBuilder(
+                          future: _getDiari(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Container();
+                            } else if (snapshot.hasError) {
+                              return Text(snapshot.error.toString());
+                            } else {
+                              return AddDiario(diari: snapshot.data!);
+                            }
+                          }),
+                    )),
                     icon: const Icon(Icons.book_rounded),
                   ),
                   ActionButton(
-                    onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const AddEsame())),
+                    onPressed: () =>
+                        Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => FutureBuilder(
+                          future: _getEsami(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Container();
+                            } else if (snapshot.hasError) {
+                              return Text(snapshot.error.toString());
+                            } else {
+                              return AddEsame(esami: snapshot.data!);
+                            }
+                          }),
+                    )),
                     icon: const Icon(Icons.school_rounded),
                   ),
                 ],

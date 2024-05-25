@@ -3,13 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:path2degree/model/categoria.dart';
 import 'package:path2degree/model/diario.dart';
+import 'package:path2degree/model/esame.dart';
 import 'package:path2degree/model/tipologia.dart';
 import 'package:path2degree/providers/database_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class AddEsame extends StatefulWidget {
-  const AddEsame({super.key});
+  const AddEsame({super.key, required this.esami});
+
+  final List<Esame> esami;
 
   @override
   State<AddEsame> createState() => _AddEsameState();
@@ -98,7 +101,12 @@ class _AddEsameState extends State<AddEsame> {
                             child: TextFormField(
                               validator: (value) {
                                 if (value!.trim().isEmpty) {
-                                  return 'Specificare il nome.';
+                                  return 'Specificare un nome valido.';
+                                } else if (widget.esami
+                                    .map((esame) => esame.nome)
+                                    .where((nomeEsame) => nomeEsame != nome)
+                                    .contains(value.trim())) {
+                                  return 'Esiste già un esame con questo nome.';
                                 }
                                 return null;
                               },
@@ -519,14 +527,7 @@ class _AddEsameState extends State<AddEsame> {
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return const Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      CircularProgressIndicator(),
-                                    ],
-                                  ),
-                                );
+                                return Container();
                               } else if (snapshot.hasError) {
                                 showDialog(
                                   context: context,

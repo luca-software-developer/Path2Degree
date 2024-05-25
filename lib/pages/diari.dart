@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:path2degree/model/diario.dart';
 import 'package:path2degree/model/esame.dart';
 import 'package:path2degree/providers/database_provider.dart';
-import 'package:path2degree/pages/contenuto_diario.dart';
-import 'package:path2degree/pages/add_diario.dart';
+import 'package:path2degree/pages/edit_pages/edit_diario.dart';
+import 'package:path2degree/pages/add_pages/add_diario.dart';
 import 'package:provider/provider.dart';
 
 class Diari extends StatefulWidget {
@@ -55,14 +55,7 @@ class _DiariState extends State<Diari> {
                 future: _getDiari(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(),
-                        ],
-                      ),
-                    );
+                    return Container();
                   } else if (snapshot.hasError) {
                     return Text(snapshot.error.toString());
                   } else {
@@ -152,7 +145,7 @@ class _DiariState extends State<Diari> {
                                                               .push(
                                                                   MaterialPageRoute(
                                                             builder: (_) =>
-                                                                ContenutoDiario(
+                                                                EditDiario(
                                                                     diario: snapshot
                                                                         .data![
                                                                             index]
@@ -228,8 +221,19 @@ class _DiariState extends State<Diari> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => const AddDiario()));
+          await Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => FutureBuilder(
+                future: _getDiari(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Container();
+                  } else if (snapshot.hasError) {
+                    return Text(snapshot.error.toString());
+                  } else {
+                    return AddDiario(diari: snapshot.data!);
+                  }
+                }),
+          ));
           setState(() {});
         },
         child: const Icon(Icons.add_rounded),

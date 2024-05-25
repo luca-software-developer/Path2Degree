@@ -622,14 +622,7 @@ class _StatisticheState extends State<Statistiche> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircularProgressIndicator(),
-                              ],
-                            ),
-                          );
+                          return Container();
                         } else if (snapshot.hasError) {
                           return Text(snapshot.error.toString());
                         } else {
@@ -726,14 +719,7 @@ class _StatisticheState extends State<Statistiche> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircularProgressIndicator(),
-                              ],
-                            ),
-                          );
+                          return Container();
                         } else if (snapshot.hasError) {
                           return Text(snapshot.error.toString());
                         } else {

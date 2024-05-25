@@ -10,9 +10,10 @@ import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class EditEsame extends StatefulWidget {
-  const EditEsame({super.key, required this.nome});
+  const EditEsame({super.key, required this.nome, required this.esami});
 
   final String nome;
+  final List<Esame> esami;
 
   @override
   State<EditEsame> createState() => _EditEsameState();
@@ -81,14 +82,7 @@ class _EditEsameState extends State<EditEsame> {
         future: _getEsame(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                ],
-              ),
-            );
+            return Container();
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           } else {
@@ -155,7 +149,13 @@ class _EditEsameState extends State<EditEsame> {
                                     child: TextFormField(
                                       validator: (value) {
                                         if (value!.trim().isEmpty) {
-                                          return 'Specificare il nome.';
+                                          return 'Specificare un nome valido.';
+                                        } else if (widget.esami
+                                            .map((esame) => esame.nome)
+                                            .where((nomeEsame) =>
+                                                nomeEsame != nome)
+                                            .contains(value.trim())) {
+                                          return 'Esiste già un esame con questo nome.';
                                         }
                                         return null;
                                       },
@@ -484,14 +484,7 @@ class _EditEsameState extends State<EditEsame> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return const Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    CircularProgressIndicator(),
-                                  ],
-                                ),
-                              );
+                              return Container();
                             } else if (snapshot.hasError) {
                               return Text(snapshot.error.toString());
                             } else {
@@ -664,15 +657,7 @@ class _EditEsameState extends State<EditEsame> {
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {
-                                        return const Center(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              CircularProgressIndicator(),
-                                            ],
-                                          ),
-                                        );
+                                        return Container();
                                       } else if (snapshot.hasError) {
                                         showDialog(
                                           context: context,

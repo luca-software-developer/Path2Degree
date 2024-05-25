@@ -7,10 +7,15 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as path;
 
 class EditRisorsa extends StatefulWidget {
-  const EditRisorsa({super.key, required this.nome, required this.diario});
+  const EditRisorsa(
+      {super.key,
+      required this.nome,
+      required this.diario,
+      required this.risorse});
 
   final String nome;
   final String diario;
+  final List<Risorsa> risorse;
 
   @override
   State<EditRisorsa> createState() => _EditRisorsaState();
@@ -18,6 +23,7 @@ class EditRisorsa extends StatefulWidget {
 
 class _EditRisorsaState extends State<EditRisorsa> {
   final _formKey = GlobalKey<FormState>();
+  final _controller = TextEditingController();
   String? _nome;
   String? _path;
 
@@ -30,7 +36,8 @@ class _EditRisorsaState extends State<EditRisorsa> {
   }
 
   Future<String?> _getPathRisorsa() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(allowMultiple: false);
     if (result != null) {
       return result.files.single.path;
     }
@@ -39,21 +46,19 @@ class _EditRisorsaState extends State<EditRisorsa> {
 
   @override
   Widget build(BuildContext context) {
+    _nome = widget.nome;
     return FutureBuilder(
         future: _getPath(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                ],
-              ),
-            );
+            return Container();
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           } else {
+            _path ??= snapshot.data!;
+            _controller.text = _path != null
+                ? path.basename(_path!)
+                : 'Nessun file selezionato';
             return Scaffold(
               appBar: AppBar(
                 centerTitle: true,
@@ -104,6 +109,12 @@ class _EditRisorsaState extends State<EditRisorsa> {
                                       validator: (value) {
                                         if (value!.trim().isEmpty) {
                                           return 'Specificare un nome valido.';
+                                        } else if (widget.risorse
+                                            .map((risorsa) => risorsa.nome)
+                                            .where((nomeRisorsa) =>
+                                                nomeRisorsa != _nome)
+                                            .contains(value.trim())) {
+                                          return 'Esiste già una risorsa con questo nome.';
                                         }
                                         return null;
                                       },
@@ -137,52 +148,44 @@ class _EditRisorsaState extends State<EditRisorsa> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 0.0),
-                        child: Column(
-                          children: [
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: TextFormField(
+                                  controller: _controller,
+                                  readOnly: true,
+                                  validator: (value) {
+                                    if (_path == null) {
+                                      return 'Scegliere un file.';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Expanded(
-                                  child: Padding(
+                                Padding(
                                     padding: const EdgeInsets.only(bottom: 8.0),
-                                    child: Text(_path != null
-                                        ? path.basename(_path!)
-                                        : path.basename(snapshot.data!)),
-                                  ),
-                                )
+                                    child: ElevatedButton(
+                                      child: const Text('Scegli'),
+                                      onPressed: () async {
+                                        _path = await _getPathRisorsa();
+                                        if (_path == null) return;
+                                        setState(() => _controller.text =
+                                            path.basename(_path!));
+                                      },
+                                    ))
                               ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 0.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 8.0),
-                                      child: ElevatedButton(
-                                        child: const Text('Scegli risorsa'),
-                                        onPressed: () async {
-                                          _path = await _getPathRisorsa();
-                                          setState(() {});
-                                        },
-                                      )),
-                                )
-                              ],
-                            ),
+                            )
                           ],
                         ),
                       ),
                       const SizedBox(
-                        height: 8.0,
+                        height: 16.0,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -222,7 +225,7 @@ class _EditRisorsaState extends State<EditRisorsa> {
                                         backgroundColor: Theme.of(context)
                                             .colorScheme
                                             .primary),
-                                    child: const Text('Modifica risorsa')),
+                                    child: const Text('Salva')),
                               ),
                             )
                           ],
