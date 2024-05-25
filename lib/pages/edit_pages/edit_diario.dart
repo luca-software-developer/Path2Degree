@@ -272,98 +272,98 @@ class _EditDiarioState extends State<EditDiario> {
                                               style: BorderStyle.solid,
                                             ),
                                           ),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              OpenFile.open(
-                                                  snapshot.data![index].path);
-                                            },
-                                            child: ListTile(
-                                              leading: const Icon(
-                                                  Icons.note_rounded,
-                                                  color: Colors.white),
-                                              title: Text(
-                                                  snapshot.data![index].nome,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyLarge
-                                                      ?.copyWith(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white)),
-                                              trailing: IntrinsicWidth(
-                                                child: Row(
-                                                  children: [
-                                                    IconButton(
-                                                        onPressed: () => Navigator
-                                                                .of(context)
-                                                            .push(
-                                                                MaterialPageRoute(
-                                                                    builder: (_) =>
-                                                                        EditRisorsa(
-                                                                          nome: snapshot
-                                                                              .data![index]
-                                                                              .nome,
-                                                                          diario:
-                                                                              widget.diario,
-                                                                          risorse:
-                                                                              snapshot.data!,
-                                                                        )))
-                                                            .then((value) =>
-                                                                setState(
-                                                                    () {})),
-                                                        icon: const Icon(Icons
-                                                            .edit_rounded)),
-                                                    IconButton(
-                                                        onPressed: () {
-                                                          Provider.of<DatabaseProvider>(
-                                                                  context,
-                                                                  listen: false)
-                                                              .database
-                                                              .then((database) {
-                                                            showDialog(
-                                                                context:
-                                                                    context,
-                                                                builder:
-                                                                    (BuildContext
-                                                                        context) {
-                                                                  return AlertDialog(
-                                                                    title: const Text(
-                                                                        'Elimina risorsa'),
-                                                                    content: Text(
-                                                                        'Sei sicuro di voler eliminare la risorsa "${snapshot.data![index].nome}"'),
-                                                                    actions: <Widget>[
-                                                                      TextButton(
-                                                                        child: const Text(
-                                                                            'Sì'),
-                                                                        onPressed:
-                                                                            () {
-                                                                          Navigator.of(context)
-                                                                              .pop();
-                                                                          database.delete(
-                                                                              'risorsa',
-                                                                              where: "nome = '${snapshot.data![index].nome}'");
-                                                                          setState(
-                                                                              () {});
-                                                                        },
-                                                                      ),
-                                                                      TextButton(
-                                                                        child: const Text(
-                                                                            'No'),
-                                                                        onPressed:
-                                                                            () {
-                                                                          Navigator.of(context)
-                                                                              .pop();
-                                                                        },
-                                                                      ),
-                                                                    ],
-                                                                  );
-                                                                });
-                                                          });
-                                                        },
-                                                        icon: const Icon(Icons
-                                                            .delete_rounded)),
-                                                  ],
-                                                ),
+                                          child: ListTile(
+                                            leading: const Icon(
+                                                Icons.note_rounded,
+                                                color: Colors.white),
+                                            title: Text(
+                                                snapshot.data![index].nome,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge
+                                                    ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white)),
+                                            trailing: IntrinsicWidth(
+                                              child: Row(
+                                                children: [
+                                                  IconButton(
+                                                      onPressed: () =>
+                                                          OpenFile.open(snapshot
+                                                              .data![index]
+                                                              .path),
+                                                      icon: const Icon(Icons
+                                                          .open_in_new_rounded)),
+                                                  IconButton(
+                                                      onPressed: () => Navigator
+                                                              .of(context)
+                                                          .push(
+                                                              MaterialPageRoute(
+                                                                  builder: (_) =>
+                                                                      EditRisorsa(
+                                                                        nome: snapshot
+                                                                            .data![index]
+                                                                            .nome,
+                                                                        diario:
+                                                                            widget.diario,
+                                                                        risorse:
+                                                                            snapshot.data!,
+                                                                      )))
+                                                          .then((value) =>
+                                                              setState(() {})),
+                                                      icon: const Icon(
+                                                          Icons.edit_rounded)),
+                                                  IconButton(
+                                                      onPressed: () {
+                                                        Provider.of<DatabaseProvider>(
+                                                                context,
+                                                                listen: false)
+                                                            .database
+                                                            .then((database) {
+                                                          showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (BuildContext
+                                                                      context) {
+                                                                return AlertDialog(
+                                                                  title: const Text(
+                                                                      'Elimina risorsa'),
+                                                                  content: Text(
+                                                                      'Sei sicuro di voler eliminare la risorsa "${snapshot.data![index].nome}"'),
+                                                                  actions: <Widget>[
+                                                                    TextButton(
+                                                                      child: const Text(
+                                                                          'Sì'),
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.of(context)
+                                                                            .pop();
+                                                                        database.delete(
+                                                                            'risorsa',
+                                                                            where:
+                                                                                "nome = '${snapshot.data![index].nome}'");
+                                                                        setState(
+                                                                            () {});
+                                                                      },
+                                                                    ),
+                                                                    TextButton(
+                                                                      child: const Text(
+                                                                          'No'),
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.of(context)
+                                                                            .pop();
+                                                                      },
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                              });
+                                                        });
+                                                      },
+                                                      icon: const Icon(Icons
+                                                          .delete_rounded)),
+                                                ],
                                               ),
                                             ),
                                           ),
