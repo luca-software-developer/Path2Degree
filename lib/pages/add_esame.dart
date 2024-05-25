@@ -21,6 +21,7 @@ class _AddEsameState extends State<AddEsame> {
   final _timeController = TextEditingController();
   final _categoriaController = TextEditingController();
   final List<String> _categorie = [];
+  String? _voto;
   Tipologia _tipologia = Tipologia.scrittoOrale;
   String? _diario;
   List<Map<String, Object?>> _diari = [];
@@ -349,35 +350,31 @@ class _AddEsameState extends State<AddEsame> {
                             flex: 382,
                             child: Padding(
                               padding: const EdgeInsets.only(left: 4.0),
-                              child: TextFormField(
-                                  onSaved: (newValue) {
-                                    if (newValue!.trim().isEmpty) {
-                                      return;
-                                    }
-                                    if (newValue == '30L') {
-                                      voto = 30;
-                                      lode = true;
-                                    } else {
-                                      voto = int.parse(newValue);
-                                      lode = false;
-                                    }
-                                  },
-                                  decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Voto'),
-                                  inputFormatters: [
-                                    TextInputFormatter.withFunction(
-                                        (oldValue, newValue) {
-                                      if (newValue.text.isEmpty) {
-                                        return newValue;
-                                      }
-                                      RegExp regex = RegExp(r'^\d+[L]?$');
-                                      if (!regex.hasMatch(newValue.text)) {
-                                        return oldValue;
-                                      }
-                                      return newValue;
-                                    })
-                                  ]),
+                              child: DropdownButtonFormField<String>(
+                                onSaved: (newValue) {
+                                  if (newValue == null) return;
+                                  voto = newValue == '30L'
+                                      ? 30
+                                      : int.parse(newValue);
+                                  lode = newValue == '30L';
+                                },
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Voto',
+                                ),
+                                items: [
+                                  ...List.generate(
+                                      13,
+                                      (index) => DropdownMenuItem<String>(
+                                          value: (18 + index).toString(),
+                                          child:
+                                              Text((18 + index).toString()))),
+                                  const DropdownMenuItem<String>(
+                                      value: '30L', child: Text('30L'))
+                                ].reversed.toList(),
+                                value: _voto,
+                                onChanged: (value) => _voto = value,
+                              ),
                             ),
                           )
                         ],
@@ -609,8 +606,8 @@ class _AddEsameState extends State<AddEsame> {
                                       child: const Text('Aggiungi'),
                                       onPressed: () async {
                                         Navigator.of(context).pop();
-                                        final newDiario = Diario(
-                                            nome: _nuovoDiario!);
+                                        final newDiario =
+                                            Diario(nome: _nuovoDiario!);
                                         Database db =
                                             await databaseProvider.database;
                                         await db.insert(

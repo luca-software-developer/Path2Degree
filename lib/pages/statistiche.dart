@@ -79,6 +79,9 @@ class _StatisticheState extends State<Statistiche> {
     final provider = Provider.of<DatabaseProvider>(context, listen: false);
     final database = await provider.database;
     final rows = await database.query('esame', where: 'voto IS NOT NULL');
+    if (rows.isEmpty) {
+      return 0.toString();
+    }
     double mediaPonderata = 0;
     int sommaCFU = 0;
     for (final row in rows) {
@@ -95,6 +98,9 @@ class _StatisticheState extends State<Statistiche> {
     final provider = Provider.of<DatabaseProvider>(context, listen: false);
     final database = await provider.database;
     final rows = await database.query('esame', where: 'voto IS NOT NULL');
+    if (rows.isEmpty) {
+      return 0.toString();
+    }
     double mediaAritmetica = 0;
     for (final row in rows) {
       int voto = row['voto'] as int;
