@@ -175,13 +175,21 @@ class _DiariState extends State<Diari> {
                                                                       child: const Text(
                                                                           'Sì'),
                                                                       onPressed:
-                                                                          () {
+                                                                          () async {
                                                                         Navigator.of(context)
                                                                             .pop();
-                                                                        database.delete(
+                                                                        await database.delete(
                                                                             'diario',
                                                                             where:
                                                                                 "nome = '${snapshot.data![index].nome}'");
+                                                                        await database.delete(
+                                                                            'appunto',
+                                                                            where:
+                                                                                "diario = '${snapshot.data![index].nome}'");
+                                                                        await database.delete(
+                                                                            'risorsa',
+                                                                            where:
+                                                                                "diario = '${snapshot.data![index].nome}'");
                                                                         setState(
                                                                             () {});
                                                                       },
