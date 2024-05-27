@@ -6,6 +6,7 @@ import 'package:path2degree/model/diario.dart';
 import 'package:path2degree/model/esame.dart';
 import 'package:path2degree/model/tipologia.dart';
 import 'package:path2degree/providers/database_provider.dart';
+import 'package:path2degree/utils/local_notification_service.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -360,7 +361,9 @@ class _AddEsameState extends State<AddEsame> {
                               padding: const EdgeInsets.only(left: 4.0),
                               child: DropdownButtonFormField<String>(
                                 onSaved: (newValue) {
-                                  if (newValue == null) return;
+                                  if (newValue == null || newValue.isEmpty) {
+                                    return;
+                                  }
                                   voto = newValue == '30L'
                                       ? 30
                                       : int.parse(newValue);
@@ -371,6 +374,8 @@ class _AddEsameState extends State<AddEsame> {
                                   labelText: 'Voto',
                                 ),
                                 items: [
+                                  const DropdownMenuItem<String>(
+                                      value: '', child: Text('N/A')),
                                   ...List.generate(
                                       13,
                                       (index) => DropdownMenuItem<String>(
@@ -615,7 +620,7 @@ class _AddEsameState extends State<AddEsame> {
                                           'diario',
                                           newDiario.toMap(),
                                           conflictAlgorithm:
-                                              ConflictAlgorithm.replace,
+                                              ConflictAlgorithm.ignore,
                                         );
                                         _diario = _nuovoDiario;
                                         diario = newDiario;
@@ -644,11 +649,11 @@ class _AddEsameState extends State<AddEsame> {
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: ElevatedButton(
                             onPressed: () async {
+                              DateTime now = DateTime.now();
+                              DateTime today =
+                                  DateTime(now.year, now.month, now.day);
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
-                                DateTime now = DateTime.now();
-                                DateTime today =
-                                    DateTime(now.year, now.month, now.day);
                                 databaseProvider.database
                                     .then((database) async {
                                   await database.insert(
@@ -687,6 +692,14 @@ class _AddEsameState extends State<AddEsame> {
                                           ConflictAlgorithm.replace,
                                     );
                                   }
+                                }).then((_) async {
+                                  EsameNotificationService service =
+                                      EsameNotificationService();
+                                  await service.initialize();
+                                  await service.scheduleExamNotification(
+                                      nome!,
+                                      data!.add(ora!.difference(today)),
+                                      luogo!);
                                 }).then((_) => Navigator.of(context).pop());
                               }
                             },

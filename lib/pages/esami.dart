@@ -4,6 +4,7 @@ import 'package:path2degree/model/esame.dart';
 import 'package:path2degree/pages/add_pages/add_esame.dart';
 import 'package:path2degree/pages/edit_pages/edit_esame.dart';
 import 'package:path2degree/providers/database_provider.dart';
+import 'package:path2degree/utils/local_notification_service.dart';
 import 'package:provider/provider.dart';
 
 class Esami extends StatefulWidget {
@@ -145,9 +146,14 @@ class _EsamiState extends State<Esami> {
                                                                         nome: snapshot
                                                                             .data![index]
                                                                             .nome,
+                                                                        esame: snapshot
+                                                                            .data![index],
                                                                         esami: snapshot
                                                                             .data!,
-                                                                      ))),
+                                                                      )))
+                                                          .then((_) => setState(
+                                                                () {},
+                                                              )),
                                                       icon: const Icon(
                                                           Icons.edit_rounded)),
                                                   IconButton(
@@ -185,6 +191,14 @@ class _EsamiState extends State<Esami> {
                                                                                 "esame = '${snapshot.data![index].nome}'");
                                                                         await database
                                                                             .rawDelete("DELETE FROM categoria AS C WHERE NOT EXISTS (SELECT * FROM appartenenza AS A WHERE A.categoria = C.nome)");
+                                                                        EsameNotificationService
+                                                                            service =
+                                                                            EsameNotificationService();
+                                                                        await service
+                                                                            .initialize();
+                                                                        service.cancelExamNotification(snapshot
+                                                                            .data![index]
+                                                                            .nome);
                                                                         setState(
                                                                             () {});
                                                                       },
@@ -307,9 +321,14 @@ class _EsamiState extends State<Esami> {
                                                                         nome: snapshot
                                                                             .data![index]
                                                                             .nome,
+                                                                        esame: snapshot
+                                                                            .data![index],
                                                                         esami: snapshot
                                                                             .data!,
-                                                                      ))),
+                                                                      )))
+                                                          .then((_) => setState(
+                                                                () {},
+                                                              )),
                                                       icon: const Icon(
                                                           Icons.edit_rounded)),
                                                   IconButton(
