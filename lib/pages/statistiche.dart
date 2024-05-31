@@ -673,7 +673,12 @@ class _StatisticheState extends State<Statistiche> {
                                               trailing: IntrinsicWidth(
                                                 child: Text(
                                                   snapshot.data![index].voto
-                                                      .toString(),
+                                                          .toString() +
+                                                      ((snapshot.data![index]
+                                                                  .lode ??
+                                                              false)
+                                                          ? 'L'
+                                                          : ''),
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .bodyLarge!
