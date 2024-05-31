@@ -292,13 +292,46 @@ class _EsamiState extends State<Esami> {
                                                                 ? Colors.white
                                                                 : Colors
                                                                     .black)),
-                                                subtitle: Opacity(
-                                                    opacity: .5,
-                                                    child: Text(
-                                                        '${DateFormat('dd/MM/yyyy').format(snapshot.data![index].dataOra)} — ${DateFormat('HH:mm').format(snapshot.data![index].dataOra)}',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyMedium)),
+                                                subtitle: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Opacity(
+                                                        opacity: .5,
+                                                        child: Text(
+                                                            '${DateFormat('dd/MM/yyyy').format(snapshot.data![index].dataOra)} — ${DateFormat('HH:mm').format(snapshot.data![index].dataOra)}',
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodyMedium)),
+                                                    Row(
+                                                      children: [
+                                                        Text('Superato con ',
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodyMedium),
+                                                        Text(
+                                                            snapshot
+                                                                    .data![
+                                                                        index]
+                                                                    .voto
+                                                                    .toString() +
+                                                                ((snapshot
+                                                                            .data![
+                                                                                index]
+                                                                            .lode ??
+                                                                        false)
+                                                                    ? 'L'
+                                                                    : ''),
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .bodyMedium),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
                                                 trailing: IntrinsicWidth(
                                                   child: Row(
                                                     children: [
