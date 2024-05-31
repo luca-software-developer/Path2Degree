@@ -30,7 +30,7 @@ class _InformazioniState extends State<Informazioni> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       SizedBox(
-                        width: 256,
+                        width: 144,
                         child: Image.asset(
                           'assets/images/icon.png',
                         ),
@@ -57,6 +57,17 @@ class _InformazioniState extends State<Informazioni> {
                           .colorScheme
                           .onSurface
                           .withOpacity(0.7),
+                    ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                "Gruppo #11\nMobile Programming A.A. 2023/2024",
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontStyle: FontStyle.italic,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                 textAlign: TextAlign.center,
               ),
