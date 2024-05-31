@@ -40,7 +40,7 @@ class _DashboardState extends State<Dashboard>
     return rows.map((row) => Esame.fromMap(row)).toList();
   }
 
-  Future<List<Esame>> _getEsamiInCorso() async {
+  Future<List<Esame>> _getEsamiNonSostenuti() async {
     final provider = Provider.of<DatabaseProvider>(context, listen: false);
     final database = await provider.database;
     final rows = await database.query('esame', where: 'voto IS NULL');
@@ -63,7 +63,7 @@ class _DashboardState extends State<Dashboard>
         valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
         builder: (_, mode, child) {
           return FutureBuilder(
-              future: _getEsamiInCorso(),
+              future: _getEsamiNonSostenuti(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Text(snapshot.error.toString());

@@ -25,7 +25,7 @@ class _EsamiState extends State<Esami> {
     return rows.map((row) => Esame.fromMap(row)).toList();
   }
 
-  Future<List<Esame>> _getEsamiInCorso() async {
+  Future<List<Esame>> _getEsamiNonSostenuti() async {
     final provider = Provider.of<DatabaseProvider>(context, listen: false);
     final database = await provider.database;
     final rows = await database.query('esame', where: 'voto IS NULL');
@@ -63,7 +63,7 @@ class _EsamiState extends State<Esami> {
                   padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
                   child: Column(
                     children: <Widget>[
-                      Text('Esami in corso',
+                      Text('Esami non ancora sostenuti',
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge
@@ -74,7 +74,7 @@ class _EsamiState extends State<Esami> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: FutureBuilder(
-                      future: _getEsamiInCorso(),
+                      future: _getEsamiNonSostenuti(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
