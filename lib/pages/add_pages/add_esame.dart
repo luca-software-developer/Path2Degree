@@ -24,10 +24,10 @@ class _AddEsameState extends State<AddEsame> {
   final _dateController = TextEditingController();
   final _timeController = TextEditingController();
   final _categoriaController = TextEditingController();
-  final List<String> _categorie = [];
-  String? _voto;
-  Tipologia _tipologia = Tipologia.scrittoOrale;
-  String? _diario;
+  final List<String> _selectedCategorie = [];
+  String? _selectedVoto;
+  Tipologia _selectedTipologia = Tipologia.scrittoOrale;
+  String? _selectedDiario;
   List<Map<String, Object?>> _diari = [];
   final Map<Tipologia, String> _tipologie = {
     Tipologia.orale: 'Orale',
@@ -36,18 +36,18 @@ class _AddEsameState extends State<AddEsame> {
   };
   String? _nuovoDiario;
 
-  String? nome;
-  String? corsoDiStudi;
-  int? cfu;
-  DateTime? data;
-  DateTime? ora;
-  String? luogo;
-  Tipologia? tipologia;
-  String? docente;
-  int? voto;
-  bool? lode;
-  List<Categoria> categorie = [];
-  Diario? diario;
+  String? _nome;
+  String? _corsoDiStudi;
+  int? _cfu;
+  DateTime? _data;
+  DateTime? _ora;
+  String? _luogo;
+  Tipologia? _tipologia;
+  String? _docente;
+  int? _voto;
+  bool? _lode;
+  final List<Categoria> _categorie = [];
+  Diario? _diario;
 
   Future<List<Map<String, Object?>>> _getDiari(databaseProvider) async {
     Database database = await databaseProvider.database;
@@ -58,7 +58,6 @@ class _AddEsameState extends State<AddEsame> {
   @override
   Widget build(BuildContext context) {
     final databaseProvider = Provider.of<DatabaseProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -105,13 +104,13 @@ class _AddEsameState extends State<AddEsame> {
                                   return 'Specificare un nome valido.';
                                 } else if (widget.esami
                                     .map((esame) => esame.nome)
-                                    .where((nomeEsame) => nomeEsame != nome)
+                                    .where((nomeEsame) => nomeEsame != _nome)
                                     .contains(value.trim())) {
                                   return 'Esiste già un esame con questo nome.';
                                 }
                                 return null;
                               },
-                              onSaved: (newValue) => nome = newValue,
+                              onSaved: (newValue) => _nome = newValue,
                               decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'Nome'),
@@ -135,7 +134,7 @@ class _AddEsameState extends State<AddEsame> {
                                   }
                                   return null;
                                 },
-                                onSaved: (newValue) => corsoDiStudi = newValue,
+                                onSaved: (newValue) => _corsoDiStudi = newValue,
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'Corso di Studi'),
@@ -154,7 +153,7 @@ class _AddEsameState extends State<AddEsame> {
                                   return null;
                                 },
                                 onSaved: (newValue) =>
-                                    cfu = int.parse(newValue!),
+                                    _cfu = int.parse(newValue!),
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'CFU'),
@@ -200,7 +199,7 @@ class _AddEsameState extends State<AddEsame> {
                                       _dateController.text =
                                           DateFormat('dd/MM/yyyy')
                                               .format(picked);
-                                      data = picked;
+                                      _data = picked;
                                     });
                                   }
                                 },
@@ -251,7 +250,7 @@ class _AddEsameState extends State<AddEsame> {
                                           .format(today.add(Duration(
                                               hours: pickedTime.hour,
                                               minutes: pickedTime.minute)));
-                                      ora = today.add(Duration(
+                                      _ora = today.add(Duration(
                                           hours: pickedTime.hour,
                                           minutes: pickedTime.minute));
                                     });
@@ -272,7 +271,7 @@ class _AddEsameState extends State<AddEsame> {
                                   }
                                   return null;
                                 },
-                                onSaved: (newValue) => luogo = newValue,
+                                onSaved: (newValue) => _luogo = newValue,
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'Luogo'),
@@ -314,15 +313,15 @@ class _AddEsameState extends State<AddEsame> {
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
                             child: DropdownButtonFormField<Tipologia>(
-                              onSaved: (newValue) => tipologia = newValue,
-                              value: _tipologia,
+                              onSaved: (newValue) => _tipologia = newValue,
+                              value: _selectedTipologia,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
                                 labelText: 'Tipologia',
                               ),
                               onChanged: (Tipologia? newValue) {
                                 setState(() {
-                                  _tipologia = newValue!;
+                                  _selectedTipologia = newValue!;
                                 });
                               },
                               items: Tipologia.values
@@ -353,7 +352,7 @@ class _AddEsameState extends State<AddEsame> {
                                   }
                                   return null;
                                 },
-                                onSaved: (newValue) => docente = newValue,
+                                onSaved: (newValue) => _docente = newValue,
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'Docente'),
@@ -369,10 +368,10 @@ class _AddEsameState extends State<AddEsame> {
                                   if (newValue == null || newValue.isEmpty) {
                                     return;
                                   }
-                                  voto = newValue == '30L'
+                                  _voto = newValue == '30L'
                                       ? 30
                                       : int.parse(newValue);
-                                  lode = newValue == '30L';
+                                  _lode = newValue == '30L';
                                 },
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
@@ -390,8 +389,8 @@ class _AddEsameState extends State<AddEsame> {
                                   const DropdownMenuItem<String>(
                                       value: '30L', child: Text('30L'))
                                 ].reversed.toList(),
-                                value: _voto,
-                                onChanged: (value) => _voto = value,
+                                value: _selectedVoto,
+                                onChanged: (value) => _selectedVoto = value,
                               ),
                             ),
                           )
@@ -428,7 +427,7 @@ class _AddEsameState extends State<AddEsame> {
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: TextFormField(
                           validator: (value) {
-                            if (_categorie.isEmpty) {
+                            if (_selectedCategorie.isEmpty) {
                               return 'Specificare almeno una categoria.';
                             }
                             return null;
@@ -451,9 +450,9 @@ class _AddEsameState extends State<AddEsame> {
                               if (nomeCategoria.isEmpty) {
                                 return;
                               }
-                              if (!_categorie.contains(nomeCategoria)) {
-                                _categorie.add(nomeCategoria);
-                                categorie.add(Categoria(nome: nomeCategoria));
+                              if (!_selectedCategorie.contains(nomeCategoria)) {
+                                _selectedCategorie.add(nomeCategoria);
+                                _categorie.add(Categoria(nome: nomeCategoria));
                               }
                               _categoriaController.clear();
                             });
@@ -473,7 +472,7 @@ class _AddEsameState extends State<AddEsame> {
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: _categorie.length,
+                      itemCount: _selectedCategorie.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
@@ -481,12 +480,13 @@ class _AddEsameState extends State<AddEsame> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(16.0),
                               border: Border.all(
+                                color: Theme.of(context).colorScheme.onSurface,
                                 width: 1,
                                 style: BorderStyle.solid,
                               ),
                             ),
                             child: ListTile(
-                              title: Text(_categorie[index],
+                              title: Text(_selectedCategorie[index],
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyLarge
@@ -498,11 +498,11 @@ class _AddEsameState extends State<AddEsame> {
                                       await databaseProvider.database;
                                   await database.delete('appartenenza',
                                       where:
-                                          "categoria = '${_categorie[index]}'");
+                                          "categoria = '${_selectedCategorie[index]}'");
                                   await database.rawDelete(
                                       "DELETE FROM categoria AS C WHERE NOT EXISTS (SELECT * FROM appartenenza AS A WHERE A.categoria = C.nome)");
                                   setState(() {});
-                                  _categorie.removeAt(index);
+                                  _selectedCategorie.removeAt(index);
                                 },
                               ),
                             ),
@@ -572,15 +572,15 @@ class _AddEsameState extends State<AddEsame> {
                                     }
                                     return null;
                                   },
-                                  value: _diario,
+                                  value: _selectedDiario,
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'Diario',
                                   ),
                                   onChanged: (String? newValue) {
                                     setState(() {
-                                      _diario = newValue!;
-                                      diario = Diario(nome: _diario!);
+                                      _selectedDiario = newValue!;
+                                      _diario = Diario(nome: _selectedDiario!);
                                     });
                                   },
                                   items: _diari.map<DropdownMenuItem<String>>(
@@ -633,8 +633,8 @@ class _AddEsameState extends State<AddEsame> {
                                           conflictAlgorithm:
                                               ConflictAlgorithm.ignore,
                                         );
-                                        _diario = _nuovoDiario;
-                                        diario = newDiario;
+                                        _selectedDiario = _nuovoDiario;
+                                        _diario = newDiario;
                                         setState(() {});
                                       },
                                     ),
@@ -670,22 +670,22 @@ class _AddEsameState extends State<AddEsame> {
                                   await database.insert(
                                       'esame',
                                       {
-                                        'nome': nome!,
-                                        'corsoDiStudi': corsoDiStudi!,
-                                        'cfu': cfu!,
-                                        'dataOra': data!
-                                            .add(ora!.difference(today))
+                                        'nome': _nome!,
+                                        'corsoDiStudi': _corsoDiStudi!,
+                                        'cfu': _cfu!,
+                                        'dataOra': _data!
+                                            .add(_ora!.difference(today))
                                             .toIso8601String(),
-                                        'luogo': luogo!,
-                                        'tipologia': tipologia!.name,
-                                        'docente': docente!,
-                                        'voto': voto,
-                                        'lode': lode,
-                                        'diario': diario!.nome
+                                        'luogo': _luogo!,
+                                        'tipologia': _tipologia!.name,
+                                        'docente': _docente!,
+                                        'voto': _voto,
+                                        'lode': _lode,
+                                        'diario': _diario!.nome
                                       },
                                       conflictAlgorithm:
                                           ConflictAlgorithm.replace);
-                                  for (final categoria in _categorie) {
+                                  for (final categoria in _selectedCategorie) {
                                     await database.insert(
                                         'categoria',
                                         {
@@ -696,7 +696,7 @@ class _AddEsameState extends State<AddEsame> {
                                     await database.insert(
                                       'appartenenza',
                                       {
-                                        'esame': nome!,
+                                        'esame': _nome!,
                                         'categoria': categoria,
                                       },
                                       conflictAlgorithm:
@@ -708,9 +708,9 @@ class _AddEsameState extends State<AddEsame> {
                                       EsameNotificationService();
                                   await service.initialize();
                                   await service.scheduleExamNotification(
-                                      nome!,
-                                      data!.add(ora!.difference(today)),
-                                      luogo!);
+                                      _nome!,
+                                      _data!.add(_ora!.difference(today)),
+                                      _luogo!);
                                 }).then((_) => Navigator.of(context).pop());
                               }
                             },

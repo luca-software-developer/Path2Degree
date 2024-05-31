@@ -30,10 +30,10 @@ class _EditEsameState extends State<EditEsame> {
   final _dateController = TextEditingController();
   final _timeController = TextEditingController();
   final _categoriaController = TextEditingController();
-  List<String> _categorie = [];
-  String? _voto;
-  Tipologia _tipologia = Tipologia.scrittoOrale;
-  String? _diario;
+  List<String> _selectedCategorie = [];
+  String? _selectedVoto;
+  Tipologia _selectedTipologia = Tipologia.scrittoOrale;
+  String? _selectedDiario;
   List<Map<String, Object?>> _diari = [];
   final Map<Tipologia, String> _tipologie = {
     Tipologia.orale: 'Orale',
@@ -42,20 +42,20 @@ class _EditEsameState extends State<EditEsame> {
   };
   String? _nuovoDiario;
 
-  String? nome;
-  String? corsoDiStudi;
-  int? cfu;
-  DateTime? data;
-  TimeOfDay? ora;
-  String? luogo;
-  Tipologia? tipologia;
-  String? docente;
-  int? voto;
-  bool? lode;
-  List<Categoria> categorie = [];
-  String? diario;
+  String? _nome;
+  String? _corsoDiStudi;
+  int? _cfu;
+  DateTime? _data;
+  TimeOfDay? _ora;
+  String? _luogo;
+  Tipologia? _tipologia;
+  String? _docente;
+  int? _voto;
+  bool? _lode;
+  List<Categoria> _categorie = [];
+  String? _diario;
 
-  late Esame esame;
+  late Esame _esame;
 
   final _scrollController = ScrollController();
 
@@ -70,7 +70,7 @@ class _EditEsameState extends State<EditEsame> {
   Future<List<Map<String, Object?>>> _getDiari(databaseProvider) async {
     Database database = await databaseProvider.database;
     return database.rawQuery(
-        'SELECT * FROM diario AS D WHERE nome = \'${esame.diario}\' OR NOT EXISTS (SELECT * FROM esame AS E WHERE E.diario = D.nome)');
+        'SELECT * FROM diario AS D WHERE nome = \'${_esame.diario}\' OR NOT EXISTS (SELECT * FROM esame AS E WHERE E.diario = D.nome)');
   }
 
   String getFormattedTime(TimeOfDay time) {
@@ -83,25 +83,26 @@ class _EditEsameState extends State<EditEsame> {
   @override
   void initState() {
     super.initState();
-    esame = widget.esame;
-    nome = esame.nome;
-    corsoDiStudi = esame.corsoDiStudi;
-    cfu = esame.cfu;
-    data = DateTime(esame.dataOra.year, esame.dataOra.month, esame.dataOra.day);
-    ora = TimeOfDay.fromDateTime(esame.dataOra);
-    luogo = esame.luogo;
-    tipologia = esame.tipologia;
-    docente = esame.docente;
-    voto = esame.voto;
-    lode = esame.lode;
-    _voto = esame.voto == null
+    _esame = widget.esame;
+    _nome = _esame.nome;
+    _corsoDiStudi = _esame.corsoDiStudi;
+    _cfu = _esame.cfu;
+    _data =
+        DateTime(_esame.dataOra.year, _esame.dataOra.month, _esame.dataOra.day);
+    _ora = TimeOfDay.fromDateTime(_esame.dataOra);
+    _luogo = _esame.luogo;
+    _tipologia = _esame.tipologia;
+    _docente = _esame.docente;
+    _voto = _esame.voto;
+    _lode = _esame.lode;
+    _selectedVoto = _esame.voto == null
         ? ''
-        : (esame.voto.toString() + ((lode ?? false) ? 'L' : ''));
-    diario = esame.diario;
-    _dateController.text = DateFormat('dd/MM/yyyy').format(data!);
-    _timeController.text = getFormattedTime(ora!);
-    _tipologia = esame.tipologia;
-    _diario = esame.diario;
+        : (_esame.voto.toString() + ((_lode ?? false) ? 'L' : ''));
+    _diario = _esame.diario;
+    _dateController.text = DateFormat('dd/MM/yyyy').format(_data!);
+    _timeController.text = getFormattedTime(_ora!);
+    _selectedTipologia = _esame.tipologia;
+    _selectedDiario = _esame.diario;
   }
 
   @override
@@ -154,17 +155,17 @@ class _EditEsameState extends State<EditEsame> {
                                   return 'Specificare un nome valido.';
                                 } else if (widget.esami
                                     .map((esame) => esame.nome)
-                                    .where((nomeEsame) => nomeEsame != nome)
+                                    .where((nomeEsame) => nomeEsame != _nome)
                                     .contains(value.trim())) {
                                   return 'Esiste già un esame con questo nome.';
                                 }
                                 return null;
                               },
-                              onSaved: (newValue) => nome = newValue,
+                              onSaved: (newValue) => _nome = newValue,
                               decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
                                   labelText: 'Nome'),
-                              initialValue: esame.nome,
+                              initialValue: _esame.nome,
                             ),
                           ),
                         )
@@ -185,11 +186,11 @@ class _EditEsameState extends State<EditEsame> {
                                   }
                                   return null;
                                 },
-                                onSaved: (newValue) => corsoDiStudi = newValue,
+                                onSaved: (newValue) => _corsoDiStudi = newValue,
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'Corso di Studi'),
-                                initialValue: esame.corsoDiStudi,
+                                initialValue: _esame.corsoDiStudi,
                               ),
                             ),
                           ),
@@ -205,7 +206,7 @@ class _EditEsameState extends State<EditEsame> {
                                   return null;
                                 },
                                 onSaved: (newValue) =>
-                                    cfu = int.parse(newValue!),
+                                    _cfu = int.parse(newValue!),
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'CFU'),
@@ -213,7 +214,7 @@ class _EditEsameState extends State<EditEsame> {
                                 inputFormatters: <TextInputFormatter>[
                                   FilteringTextInputFormatter.digitsOnly,
                                 ],
-                                initialValue: esame.cfu.toString(),
+                                initialValue: _esame.cfu.toString(),
                               ),
                             ),
                           )
@@ -243,7 +244,7 @@ class _EditEsameState extends State<EditEsame> {
                                   final DateTime? picked = await showDatePicker(
                                     context: context,
                                     locale: const Locale('it', 'IT'),
-                                    initialDate: data,
+                                    initialDate: _data,
                                     firstDate: DateTime(1970),
                                     lastDate: DateTime(2030),
                                   );
@@ -252,7 +253,7 @@ class _EditEsameState extends State<EditEsame> {
                                       _dateController.text =
                                           DateFormat('dd/MM/yyyy')
                                               .format(picked);
-                                      data = picked;
+                                      _data = picked;
                                     });
                                   }
                                 },
@@ -280,7 +281,7 @@ class _EditEsameState extends State<EditEsame> {
                                   final TimeOfDay? pickedTime =
                                       await showTimePicker(
                                     context: context,
-                                    initialTime: ora!,
+                                    initialTime: _ora!,
                                     builder:
                                         (BuildContext context, Widget? child) {
                                       return MediaQuery(
@@ -296,9 +297,9 @@ class _EditEsameState extends State<EditEsame> {
                                   );
                                   if (pickedTime != null) {
                                     setState(() {
-                                      ora = pickedTime;
+                                      _ora = pickedTime;
                                       _timeController.text =
-                                          getFormattedTime(ora!);
+                                          getFormattedTime(_ora!);
                                     });
                                   }
                                 },
@@ -317,11 +318,11 @@ class _EditEsameState extends State<EditEsame> {
                                     }
                                     return null;
                                   },
-                                  onSaved: (newValue) => luogo = newValue,
+                                  onSaved: (newValue) => _luogo = newValue,
                                   decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       labelText: 'Luogo'),
-                                  initialValue: esame.luogo),
+                                  initialValue: _esame.luogo),
                             ),
                           )
                         ],
@@ -359,15 +360,15 @@ class _EditEsameState extends State<EditEsame> {
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
                             child: DropdownButtonFormField<Tipologia>(
-                              onSaved: (newValue) => tipologia = newValue,
-                              value: _tipologia,
+                              onSaved: (newValue) => _tipologia = newValue,
+                              value: _selectedTipologia,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
                                 labelText: 'Tipologia',
                               ),
                               onChanged: (Tipologia? newValue) {
                                 setState(() {
-                                  _tipologia = newValue!;
+                                  _selectedTipologia = newValue!;
                                 });
                               },
                               items: Tipologia.values
@@ -398,11 +399,11 @@ class _EditEsameState extends State<EditEsame> {
                                   }
                                   return null;
                                 },
-                                onSaved: (newValue) => docente = newValue,
+                                onSaved: (newValue) => _docente = newValue,
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'Docente'),
-                                initialValue: esame.docente,
+                                initialValue: _esame.docente,
                               ),
                             ),
                           ),
@@ -413,14 +414,14 @@ class _EditEsameState extends State<EditEsame> {
                               child: DropdownButtonFormField<String?>(
                                 onSaved: (newValue) {
                                   if (newValue == null || newValue.isEmpty) {
-                                    voto = null;
-                                    lode = null;
+                                    _voto = null;
+                                    _lode = null;
                                     return;
                                   }
-                                  voto = newValue == '30L'
+                                  _voto = newValue == '30L'
                                       ? 30
                                       : int.parse(newValue);
-                                  lode = newValue == '30L';
+                                  _lode = newValue == '30L';
                                 },
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
@@ -438,8 +439,8 @@ class _EditEsameState extends State<EditEsame> {
                                   const DropdownMenuItem<String>(
                                       value: '30L', child: Text('30L'))
                                 ].reversed.toList(),
-                                value: _voto,
-                                onChanged: (value) => _voto = value,
+                                value: _selectedVoto,
+                                onChanged: (value) => _selectedVoto = value,
                               ),
                             ),
                           )
@@ -475,8 +476,8 @@ class _EditEsameState extends State<EditEsame> {
                     } else if (snapshot.hasError) {
                       return Text(snapshot.error.toString());
                     } else {
-                      _categorie = snapshot.data!;
-                      categorie = snapshot.data!
+                      _selectedCategorie = snapshot.data!;
+                      _categorie = snapshot.data!
                           .map(
                               (nomeCategoria) => Categoria(nome: nomeCategoria))
                           .toList();
@@ -490,7 +491,7 @@ class _EditEsameState extends State<EditEsame> {
                                   padding: const EdgeInsets.only(bottom: 8.0),
                                   child: TextFormField(
                                     validator: (value) {
-                                      if (_categorie.isEmpty) {
+                                      if (_selectedCategorie.isEmpty) {
                                         return 'Specificare almeno una categoria.';
                                       }
                                       return null;
@@ -516,15 +517,17 @@ class _EditEsameState extends State<EditEsame> {
                                       if (nomeCategoria.isEmpty) {
                                         return;
                                       }
-                                      if (!_categorie.contains(nomeCategoria)) {
-                                        _categorie.add(nomeCategoria);
-                                        categorie.add(
+                                      if (!_selectedCategorie
+                                          .contains(nomeCategoria)) {
+                                        _selectedCategorie.add(nomeCategoria);
+                                        _categorie.add(
                                             Categoria(nome: nomeCategoria));
                                       }
                                       _categoriaController.clear();
                                       Database database =
                                           await databaseProvider.database;
-                                      for (final categoria in _categorie) {
+                                      for (final categoria
+                                          in _selectedCategorie) {
                                         await database.insert(
                                             'categoria',
                                             {
@@ -535,7 +538,7 @@ class _EditEsameState extends State<EditEsame> {
                                         await database.insert(
                                           'appartenenza',
                                           {
-                                            'esame': nome!,
+                                            'esame': _nome!,
                                             'categoria': categoria,
                                           },
                                           conflictAlgorithm:
@@ -560,7 +563,7 @@ class _EditEsameState extends State<EditEsame> {
                               ListView.builder(
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
-                                itemCount: _categorie.length,
+                                itemCount: _selectedCategorie.length,
                                 itemBuilder: (context, index) {
                                   return Padding(
                                     padding: const EdgeInsets.only(bottom: 8.0),
@@ -569,12 +572,15 @@ class _EditEsameState extends State<EditEsame> {
                                         borderRadius:
                                             BorderRadius.circular(16.0),
                                         border: Border.all(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
                                           width: 1,
                                           style: BorderStyle.solid,
                                         ),
                                       ),
                                       child: ListTile(
-                                        title: Text(_categorie[index],
+                                        title: Text(_selectedCategorie[index],
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyLarge
@@ -589,11 +595,11 @@ class _EditEsameState extends State<EditEsame> {
                                             await database.delete(
                                                 'appartenenza',
                                                 where:
-                                                    "categoria = '${_categorie[index]}'");
+                                                    "categoria = '${_selectedCategorie[index]}'");
                                             await database.rawDelete(
                                                 "DELETE FROM categoria AS C WHERE NOT EXISTS (SELECT * FROM appartenenza AS A WHERE A.categoria = C.nome)");
                                             setState(() {});
-                                            _categorie.removeAt(index);
+                                            _selectedCategorie.removeAt(index);
                                           },
                                         ),
                                       ),
@@ -666,14 +672,14 @@ class _EditEsameState extends State<EditEsame> {
                                     }
                                     return null;
                                   },
-                                  value: _diario,
+                                  value: _selectedDiario,
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'Diario',
                                   ),
                                   onChanged: (String? newValue) {
                                     setState(() {
-                                      _diario = newValue!;
+                                      _selectedDiario = newValue!;
                                     });
                                   },
                                   items: _diari.map<DropdownMenuItem<String>>(
@@ -726,8 +732,8 @@ class _EditEsameState extends State<EditEsame> {
                                           conflictAlgorithm:
                                               ConflictAlgorithm.replace,
                                         );
-                                        _diario = _nuovoDiario;
-                                        diario = _diario;
+                                        _selectedDiario = _nuovoDiario;
+                                        _diario = _selectedDiario;
                                         setState(() {});
                                       },
                                     ),
@@ -760,41 +766,41 @@ class _EditEsameState extends State<EditEsame> {
                                   await database.update(
                                       'esame',
                                       {
-                                        'nome': nome!,
-                                        'corsoDiStudi': corsoDiStudi!,
-                                        'cfu': cfu!,
-                                        'dataOra': data!
+                                        'nome': _nome!,
+                                        'corsoDiStudi': _corsoDiStudi!,
+                                        'cfu': _cfu!,
+                                        'dataOra': _data!
                                             .add(Duration(
-                                                hours: ora!.hour,
-                                                minutes: ora!.minute))
+                                                hours: _ora!.hour,
+                                                minutes: _ora!.minute))
                                             .toIso8601String(),
-                                        'luogo': luogo!,
-                                        'tipologia': tipologia!.name,
-                                        'docente': docente!,
-                                        'voto': voto,
-                                        'lode': lode == true ? 1 : 0,
-                                        'diario': diario!
+                                        'luogo': _luogo!,
+                                        'tipologia': _tipologia!.name,
+                                        'docente': _docente!,
+                                        'voto': _voto,
+                                        'lode': _lode == true ? 1 : 0,
+                                        'diario': _diario!
                                       },
-                                      where: "nome = '${esame.nome}'",
+                                      where: "nome = '${_esame.nome}'",
                                       conflictAlgorithm:
                                           ConflictAlgorithm.replace);
                                   await database.update(
                                       'appartenenza',
                                       {
-                                        'esame': nome!,
+                                        'esame': _nome!,
                                       },
-                                      where: "esame = '${esame.nome}'");
+                                      where: "esame = '${_esame.nome}'");
                                 }).then((_) async {
                                   EsameNotificationService service =
                                       EsameNotificationService();
                                   await service.initialize();
-                                  await service.cancelExamNotification(nome!);
+                                  await service.cancelExamNotification(_nome!);
                                   await service.scheduleExamNotification(
-                                      nome!,
-                                      data!.add(Duration(
-                                          hours: ora!.hour,
-                                          minutes: ora!.minute)),
-                                      luogo!);
+                                      _nome!,
+                                      _data!.add(Duration(
+                                          hours: _ora!.hour,
+                                          minutes: _ora!.minute)),
+                                      _luogo!);
                                 }).then((_) => Navigator.of(context).pop());
                               }
                             },

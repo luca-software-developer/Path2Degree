@@ -123,6 +123,9 @@ class _EditDiarioState extends State<EditDiario> {
                                             borderRadius:
                                                 BorderRadius.circular(16.0),
                                             border: Border.all(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface,
                                               width: 1,
                                               style: BorderStyle.solid,
                                             ),
@@ -262,6 +265,9 @@ class _EditDiarioState extends State<EditDiario> {
                                             borderRadius:
                                                 BorderRadius.circular(16.0),
                                             border: Border.all(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface,
                                               width: 1,
                                               style: BorderStyle.solid,
                                             ),

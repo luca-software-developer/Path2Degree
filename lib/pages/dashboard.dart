@@ -98,14 +98,16 @@ class _DashboardState extends State<Dashboard>
                             },
                             calendarStyle: CalendarStyle(
                               todayDecoration: BoxDecoration(
-                                  color: mode.isDark
+                                  color: AdaptiveTheme.of(context).brightness ==
+                                          Brightness.dark
                                       ? Theme.of(context)
                                           .colorScheme
                                           .inversePrimary
                                       : Theme.of(context).colorScheme.primary,
                                   shape: BoxShape.circle),
                               selectedDecoration: BoxDecoration(
-                                  color: mode.isDark
+                                  color: AdaptiveTheme.of(context).brightness ==
+                                          Brightness.dark
                                       ? Theme.of(context)
                                           .colorScheme
                                           .onInverseSurface
@@ -200,6 +202,9 @@ class _DashboardState extends State<Dashboard>
                                                         BorderRadius.circular(
                                                             16.0),
                                                     border: Border.all(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onSurface,
                                                       width: 1,
                                                       style: BorderStyle.solid,
                                                     ),

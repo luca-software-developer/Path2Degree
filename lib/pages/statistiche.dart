@@ -645,6 +645,9 @@ class _StatisticheState extends State<Statistiche> {
                                               borderRadius:
                                                   BorderRadius.circular(16.0),
                                               border: Border.all(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurface,
                                                 width: 1,
                                                 style: BorderStyle.solid,
                                               ),
@@ -735,6 +738,9 @@ class _StatisticheState extends State<Statistiche> {
                                               borderRadius:
                                                   BorderRadius.circular(16.0),
                                               border: Border.all(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurface,
                                                 width: 1,
                                                 style: BorderStyle.solid,
                                               ),

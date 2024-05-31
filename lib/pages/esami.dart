@@ -109,6 +109,9 @@ class _EsamiState extends State<Esami> {
                                                 borderRadius:
                                                     BorderRadius.circular(16.0),
                                                 border: Border.all(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface,
                                                   width: 1,
                                                   style: BorderStyle.solid,
                                                 ),
@@ -124,7 +127,11 @@ class _EsamiState extends State<Esami> {
                                                         ?.copyWith(
                                                             fontWeight:
                                                                 FontWeight.bold,
-                                                            color: mode.isDark
+                                                            color: AdaptiveTheme.of(
+                                                                            context)
+                                                                        .brightness ==
+                                                                    Brightness
+                                                                        .dark
                                                                 ? Colors.white
                                                                 : Colors
                                                                     .black)),
@@ -272,6 +279,9 @@ class _EsamiState extends State<Esami> {
                                                 borderRadius:
                                                     BorderRadius.circular(16.0),
                                                 border: Border.all(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface,
                                                   width: 1,
                                                   style: BorderStyle.solid,
                                                 ),
@@ -288,7 +298,11 @@ class _EsamiState extends State<Esami> {
                                                         ?.copyWith(
                                                             fontWeight:
                                                                 FontWeight.bold,
-                                                            color: mode.isDark
+                                                            color: AdaptiveTheme.of(
+                                                                            context)
+                                                                        .brightness ==
+                                                                    Brightness
+                                                                        .dark
                                                                 ? Colors.white
                                                                 : Colors
                                                                     .black)),

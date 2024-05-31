@@ -78,6 +78,9 @@ class _CategorieState extends State<Categorie> {
                                                 borderRadius:
                                                     BorderRadius.circular(16.0),
                                                 border: Border.all(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface,
                                                   width: 1,
                                                   style: BorderStyle.solid,
                                                 ),
@@ -95,7 +98,11 @@ class _CategorieState extends State<Categorie> {
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold,
-                                                              color: mode.isDark
+                                                              color: AdaptiveTheme.of(
+                                                                              context)
+                                                                          .brightness ==
+                                                                      Brightness
+                                                                          .dark
                                                                   ? Colors.white
                                                                   : Colors
                                                                       .black))),
