@@ -133,7 +133,8 @@ class _StatisticheState extends State<Statistiche> {
     return rows
         .map((row) => {
               'categoria': row['categoria'] as String,
-              'votoMedio': ((row['votoMedio'] ?? 0.0) as double).toString()
+              'votoMedio':
+                  ((row['votoMedio'] ?? 0.0) as double).toStringAsFixed(1)
             })
         .toList();
   }
