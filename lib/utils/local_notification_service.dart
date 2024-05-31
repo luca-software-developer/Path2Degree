@@ -39,7 +39,7 @@ class EsameNotificationService {
         nome.hashCode,
         'Esame \'$nome\'',
         'L\'esame \'$nome\' è alle ${DateFormat('HH:mm').format(dataOra)} presso \'$luogo\'.',
-        TZDateTime.from(dataOra, tz.local),
+        TZDateTime.from(dataOra.add(const Duration(days: -1)), tz.local),
         const NotificationDetails(
             android: AndroidNotificationDetails('esami', 'esami')),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
