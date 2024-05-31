@@ -97,7 +97,7 @@ class _DashboardState extends State<Dashboard>
                             color: Theme.of(context).colorScheme.primary,
                             shape: BoxShape.circle),
                         selectedDecoration: const BoxDecoration(
-                            color: Colors.white24, shape: BoxShape.circle),
+                            color: Colors.grey, shape: BoxShape.circle),
                         markerDecoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.onSurface,
                             shape: BoxShape.circle),
@@ -183,16 +183,13 @@ class _DashboardState extends State<Dashboard>
                                               borderRadius:
                                                   BorderRadius.circular(16.0),
                                               border: Border.all(
-                                                color: Colors.white
-                                                    .withOpacity(0.3),
                                                 width: 1,
                                                 style: BorderStyle.solid,
                                               ),
                                             ),
                                             child: ListTile(
                                               leading: const Icon(
-                                                  Icons.alarm_rounded,
-                                                  color: Colors.white),
+                                                  Icons.alarm_rounded),
                                               title: Text(
                                                   esamiPromemoria[index].nome,
                                                   style: Theme.of(context)
@@ -200,18 +197,14 @@ class _DashboardState extends State<Dashboard>
                                                       .bodyLarge
                                                       ?.copyWith(
                                                           fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white)),
+                                                              FontWeight.bold)),
                                               subtitle: Opacity(
                                                 opacity: .5,
                                                 child: Text(
                                                     '${DateFormat('dd/MM/yyyy').format(esamiPromemoria[index].dataOra)} — ${DateFormat('HH:mm').format(esamiPromemoria[index].dataOra)}',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .bodyMedium
-                                                        ?.copyWith(
-                                                            color:
-                                                                Colors.white)),
+                                                        .bodyMedium),
                                               ),
                                             ),
                                           ),

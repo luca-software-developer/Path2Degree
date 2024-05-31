@@ -190,6 +190,7 @@ class _AddEsameState extends State<AddEsame> {
                                 onTap: () async {
                                   final DateTime? picked = await showDatePicker(
                                     context: context,
+                                    locale: const Locale('it', 'IT'),
                                     initialDate: DateTime.now(),
                                     firstDate: DateTime(1970),
                                     lastDate: DateTime(2030),
@@ -233,7 +234,11 @@ class _AddEsameState extends State<AddEsame> {
                                       return MediaQuery(
                                         data: MediaQuery.of(context).copyWith(
                                             alwaysUse24HourFormat: true),
-                                        child: child!,
+                                        child: Localizations.override(
+                                          context: context,
+                                          locale: const Locale('it', 'IT'),
+                                          child: child,
+                                        ),
                                       );
                                     },
                                   );
@@ -476,10 +481,6 @@ class _AddEsameState extends State<AddEsame> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(16.0),
                               border: Border.all(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimary
-                                    .withOpacity(0.3),
                                 width: 1,
                                 style: BorderStyle.solid,
                               ),
@@ -489,11 +490,7 @@ class _AddEsameState extends State<AddEsame> {
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyLarge
-                                      ?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary)),
+                                      ?.copyWith(fontWeight: FontWeight.bold)),
                             ),
                           ),
                         );

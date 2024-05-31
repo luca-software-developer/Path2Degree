@@ -645,16 +645,13 @@ class _StatisticheState extends State<Statistiche> {
                                               borderRadius:
                                                   BorderRadius.circular(16.0),
                                               border: Border.all(
-                                                color: Colors.white
-                                                    .withOpacity(0.3),
                                                 width: 1,
                                                 style: BorderStyle.solid,
                                               ),
                                             ),
                                             child: ListTile(
                                               leading: const Icon(
-                                                  Icons.school_rounded,
-                                                  color: Colors.white),
+                                                  Icons.school_rounded),
                                               title: Text(
                                                   snapshot.data![index].nome,
                                                   style: Theme.of(context)
@@ -662,18 +659,14 @@ class _StatisticheState extends State<Statistiche> {
                                                       .bodyLarge
                                                       ?.copyWith(
                                                           fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white)),
+                                                              FontWeight.bold)),
                                               subtitle: Opacity(
                                                   opacity: .5,
                                                   child: Text(
                                                       '${DateFormat('dd/MM/yyyy').format(snapshot.data![index].dataOra)} — ${DateFormat('HH:mm').format(snapshot.data![index].dataOra)}',
                                                       style: Theme.of(context)
                                                           .textTheme
-                                                          .bodyMedium
-                                                          ?.copyWith(
-                                                              color: Colors
-                                                                  .white))),
+                                                          .bodyMedium)),
                                               trailing: IntrinsicWidth(
                                                 child: Text(
                                                   snapshot.data![index].voto
@@ -742,16 +735,13 @@ class _StatisticheState extends State<Statistiche> {
                                               borderRadius:
                                                   BorderRadius.circular(16.0),
                                               border: Border.all(
-                                                color: Colors.white
-                                                    .withOpacity(0.3),
                                                 width: 1,
                                                 style: BorderStyle.solid,
                                               ),
                                             ),
                                             child: ListTile(
                                               leading: const Icon(
-                                                  Icons.category_rounded,
-                                                  color: Colors.white),
+                                                  Icons.category_rounded),
                                               title: Text(
                                                   snapshot.data![index]
                                                       ['categoria']!,
@@ -760,8 +750,7 @@ class _StatisticheState extends State<Statistiche> {
                                                       .bodyLarge
                                                       ?.copyWith(
                                                           fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white)),
+                                                              FontWeight.bold)),
                                               trailing: IntrinsicWidth(
                                                 child: Text(
                                                   snapshot.data![index]

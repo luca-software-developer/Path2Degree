@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:path2degree/model/categoria.dart';
 import 'package:path2degree/providers/database_provider.dart';
@@ -22,91 +23,97 @@ class _CategorieState extends State<Categorie> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: TextField(
-                controller: _controller,
-                decoration: const InputDecoration(
-                    hintText: 'Cerca categorie...',
-                    prefixIcon: Icon(Icons.search_rounded)),
-                onChanged: (value) => setState(() {}),
-              ),
-            ),
-            FutureBuilder(
-                future: _getCategorie(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Container();
-                  } else if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  } else {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: snapshot.data!.isEmpty
-                          ? const Center(
-                              child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 16.0),
-                              child: Text('Nessun elemento'),
-                            ))
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: snapshot.data!.length,
-                              itemBuilder: (context, index) {
-                                return _controller.text.trim().isNotEmpty &&
-                                        !snapshot.data![index].nome
-                                            .trim()
-                                            .toLowerCase()
-                                            .contains(_controller.text
+    return ValueListenableBuilder(
+      valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
+      builder: (_, mode, child) {
+        return Scaffold(
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextField(
+                    controller: _controller,
+                    decoration: const InputDecoration(
+                        hintText: 'Cerca categorie...',
+                        prefixIcon: Icon(Icons.search_rounded)),
+                    onChanged: (value) => setState(() {}),
+                  ),
+                ),
+                FutureBuilder(
+                    future: _getCategorie(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container();
+                      } else if (snapshot.hasError) {
+                        return Text(snapshot.error.toString());
+                      } else {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: snapshot.data!.isEmpty
+                              ? const Center(
+                                  child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                                  child: Text('Nessun elemento'),
+                                ))
+                              : ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (context, index) {
+                                    return _controller.text.trim().isNotEmpty &&
+                                            !snapshot.data![index].nome
                                                 .trim()
-                                                .toLowerCase())
-                                    ? const SizedBox.shrink()
-                                    : Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            16, 16, 16, 0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(16.0),
-                                            border: Border.all(
-                                              color:
-                                                  Colors.white.withOpacity(0.3),
-                                              width: 1,
-                                              style: BorderStyle.solid,
+                                                .toLowerCase()
+                                                .contains(_controller.text
+                                                    .trim()
+                                                    .toLowerCase())
+                                        ? const SizedBox.shrink()
+                                        : Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                16, 16, 16, 0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(16.0),
+                                                border: Border.all(
+                                                  width: 1,
+                                                  style: BorderStyle.solid,
+                                                ),
+                                              ),
+                                              child: ListTile(
+                                                  leading: const Icon(
+                                                      Icons.category_rounded),
+                                                  title: Text(
+                                                      snapshot
+                                                          .data![index].nome,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyLarge
+                                                          ?.copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: mode.isDark
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black))),
                                             ),
-                                          ),
-                                          child: ListTile(
-                                              leading: const Icon(
-                                                  Icons.category_rounded,
-                                                  color: Colors.white),
-                                              title: Text(
-                                                  snapshot.data![index].nome,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyLarge
-                                                      ?.copyWith(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color:
-                                                              Colors.white))),
-                                        ),
-                                      );
-                              },
-                            ),
-                    );
-                  }
-                }),
-            const SizedBox(
-              height: 8.0,
-            )
-          ],
-        ),
-      ),
+                                          );
+                                  },
+                                ),
+                        );
+                      }
+                    }),
+                const SizedBox(
+                  height: 8.0,
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

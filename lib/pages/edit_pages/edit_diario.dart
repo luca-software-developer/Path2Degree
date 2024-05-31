@@ -123,16 +123,13 @@ class _EditDiarioState extends State<EditDiario> {
                                             borderRadius:
                                                 BorderRadius.circular(16.0),
                                             border: Border.all(
-                                              color:
-                                                  Colors.white.withOpacity(0.3),
                                               width: 1,
                                               style: BorderStyle.solid,
                                             ),
                                           ),
                                           child: ListTile(
-                                            leading: const Icon(
-                                                Icons.note_rounded,
-                                                color: Colors.white),
+                                            leading:
+                                                const Icon(Icons.note_rounded),
                                             title: Text(
                                                 snapshot.data![index].nome,
                                                 style: Theme.of(context)
@@ -140,8 +137,7 @@ class _EditDiarioState extends State<EditDiario> {
                                                     .bodyLarge
                                                     ?.copyWith(
                                                         fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.white)),
+                                                            FontWeight.bold)),
                                             trailing: IntrinsicWidth(
                                               child: Row(
                                                 children: [
@@ -266,16 +262,13 @@ class _EditDiarioState extends State<EditDiario> {
                                             borderRadius:
                                                 BorderRadius.circular(16.0),
                                             border: Border.all(
-                                              color:
-                                                  Colors.white.withOpacity(0.3),
                                               width: 1,
                                               style: BorderStyle.solid,
                                             ),
                                           ),
                                           child: ListTile(
-                                            leading: const Icon(
-                                                Icons.note_rounded,
-                                                color: Colors.white),
+                                            leading:
+                                                const Icon(Icons.note_rounded),
                                             title: Text(
                                                 snapshot.data![index].nome,
                                                 style: Theme.of(context)
@@ -283,8 +276,7 @@ class _EditDiarioState extends State<EditDiario> {
                                                     .bodyLarge
                                                     ?.copyWith(
                                                         fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.white)),
+                                                            FontWeight.bold)),
                                             trailing: IntrinsicWidth(
                                               child: Row(
                                                 children: [

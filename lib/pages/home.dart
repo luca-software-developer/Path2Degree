@@ -19,6 +19,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  final _pageViewController = PageController(initialPage: 2);
   int _selectedIndex = 2;
   static const List<String> _widgetTitles = <String>[
     'Categorie',
@@ -52,6 +53,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      _pageViewController.animateToPage(_selectedIndex,
+          duration: const Duration(milliseconds: 250), curve: Curves.easeInOut);
     });
   }
 
@@ -224,7 +227,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ],
         ),
       ),
-      body: _widgetOptions.elementAt(_selectedIndex),
+      body: PageView(
+        controller: _pageViewController,
+        children: _widgetOptions,
+        onPageChanged: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+      ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
           splashColor: Colors.transparent,

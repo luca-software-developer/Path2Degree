@@ -1,8 +1,15 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path2degree/providers/shared_preferences_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+const List<Widget> modeIcons = <Widget>[
+  Icon(Icons.sunny),
+  Icon(Icons.brightness_2),
+  Icon(Icons.auto_fix_high),
+];
 
 class Impostazioni extends StatefulWidget {
   const Impostazioni({super.key});
@@ -18,6 +25,11 @@ class _ImpostazioniState extends State<Impostazioni> {
 
   @override
   Widget build(BuildContext context) {
+    final List<bool> selectedMode = <bool>[
+      AdaptiveTheme.of(context).mode == AdaptiveThemeMode.light,
+      AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark,
+      AdaptiveTheme.of(context).mode == AdaptiveThemeMode.system,
+    ];
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -64,7 +76,12 @@ class _ImpostazioniState extends State<Impostazioni> {
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return Container();
+                                    return TextFormField(
+                                      decoration: const InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          labelText: 'Scegli una data'),
+                                      readOnly: true,
+                                    );
                                   } else if (snapshot.hasError) {
                                     return Text(snapshot.error.toString());
                                   } else {
@@ -95,6 +112,7 @@ class _ImpostazioniState extends State<Impostazioni> {
                                         final DateTime? picked =
                                             await showDatePicker(
                                           context: context,
+                                          locale: const Locale('it', 'IT'),
                                           initialDate: data,
                                           firstDate: DateTime(1970),
                                           lastDate: DateTime(2030),
@@ -150,9 +168,47 @@ class _ImpostazioniState extends State<Impostazioni> {
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 8.0,
-              )
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Tema dell\'app',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge
+                            ?.copyWith(fontWeight: FontWeight.bold)),
+                    Opacity(
+                      opacity: .5,
+                      child: Text('Scegli il tema che preferisci!',
+                          style: Theme.of(context).textTheme.bodyMedium),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
+                child: ToggleButtons(
+                  direction: Axis.horizontal,
+                  onPressed: (int index) {
+                    setState(() {
+                      for (int i = 0; i < selectedMode.length; i++) {
+                        selectedMode[i] = i == index;
+                      }
+                      if (selectedMode[0]) {
+                        AdaptiveTheme.of(context).setLight();
+                      } else if (selectedMode[1]) {
+                        AdaptiveTheme.of(context).setDark();
+                      } else {
+                        AdaptiveTheme.of(context).setSystem();
+                      }
+                    });
+                  },
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  isSelected: selectedMode,
+                  children: modeIcons,
+                ),
+              ),
             ],
           ),
         ),
