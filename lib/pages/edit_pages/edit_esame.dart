@@ -581,6 +581,21 @@ class _EditEsameState extends State<EditEsame> {
                                                 ?.copyWith(
                                                     fontWeight:
                                                         FontWeight.bold)),
+                                        trailing: IconButton(
+                                          icon: const Icon(Icons.delete),
+                                          onPressed: () async {
+                                            Database database =
+                                                await databaseProvider.database;
+                                            await database.delete(
+                                                'appartenenza',
+                                                where:
+                                                    "categoria = '${_categorie[index]}'");
+                                            await database.rawDelete(
+                                                "DELETE FROM categoria AS C WHERE NOT EXISTS (SELECT * FROM appartenenza AS A WHERE A.categoria = C.nome)");
+                                            setState(() {});
+                                            _categorie.removeAt(index);
+                                          },
+                                        ),
                                       ),
                                     ),
                                   );
