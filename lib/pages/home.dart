@@ -138,9 +138,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   title: const Text('Dashboard'),
                   onTap: () {
                     Navigator.of(context).pop();
-                    setState(() {
-                      _selectedIndex = 2;
-                    });
+                    setState(() => _onItemTapped(2));
                   },
                 ),
                 ListTile(
@@ -148,9 +146,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   title: const Text('Esami'),
                   onTap: () {
                     Navigator.of(context).pop();
-                    setState(() {
-                      _selectedIndex = 4;
-                    });
+                    setState(() => _onItemTapped(4));
                   },
                 ),
                 ListTile(
@@ -158,9 +154,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   title: const Text('Diari'),
                   onTap: () {
                     Navigator.of(context).pop();
-                    setState(() {
-                      _selectedIndex = 3;
-                    });
+                    setState(() => _onItemTapped(3));
                   },
                 ),
                 ListTile(
@@ -168,9 +162,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   title: const Text('Statistiche'),
                   onTap: () {
                     Navigator.of(context).pop();
-                    setState(() {
-                      _selectedIndex = 1;
-                    });
+                    setState(() => _onItemTapped(1));
                   },
                 ),
                 ListTile(
@@ -178,9 +170,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   title: const Text('Categorie'),
                   onTap: () {
                     Navigator.of(context).pop();
-                    setState(() {
-                      _selectedIndex = 0;
-                    });
+                    setState(() => _onItemTapped(0));
                   },
                 ),
                 const Divider(),

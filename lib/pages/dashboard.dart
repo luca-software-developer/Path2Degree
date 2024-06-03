@@ -71,74 +71,82 @@ class _DashboardState extends State<Dashboard>
                   return Scaffold(
                     body: SingleChildScrollView(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          TableCalendar(
-                            locale: 'it_IT',
-                            firstDay: DateTime.utc(1970, 01, 01),
-                            lastDay: DateTime.utc(2038, 31, 12),
-                            focusedDay: _focusedDay,
-                            eventLoader: (day) {
-                              if (snapshot.data == null) return [];
-                              List<Esame> esami = snapshot.data!;
-                              List<Esame> esamiOggi = [];
-                              for (final esame in esami) {
-                                if (esame.dataOra.isAfter(day) &&
-                                    esame.dataOra.isBefore(
-                                        day.add(const Duration(hours: 24)))) {
-                                  esamiOggi.add(esame);
+                          Container(
+                            constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.of(context).size.longestSide *
+                                        .8),
+                            child: TableCalendar(
+                              locale: 'it_IT',
+                              firstDay: DateTime.utc(1970, 01, 01),
+                              lastDay: DateTime.utc(2038, 31, 12),
+                              focusedDay: _focusedDay,
+                              eventLoader: (day) {
+                                if (snapshot.data == null) return [];
+                                List<Esame> esami = snapshot.data!;
+                                List<Esame> esamiOggi = [];
+                                for (final esame in esami) {
+                                  if (esame.dataOra.isAfter(day) &&
+                                      esame.dataOra.isBefore(
+                                          day.add(const Duration(hours: 24)))) {
+                                    esamiOggi.add(esame);
+                                  }
                                 }
-                              }
-                              return esamiOggi;
-                            },
-                            calendarFormat: _calendarFormat,
-                            availableCalendarFormats: const {
-                              CalendarFormat.month: 'Questo mese',
-                              CalendarFormat.week: 'Questa settimana'
-                            },
-                            calendarStyle: CalendarStyle(
-                              todayDecoration: BoxDecoration(
-                                  color: AdaptiveTheme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Theme.of(context)
-                                          .colorScheme
-                                          .inversePrimary
-                                      : Theme.of(context).colorScheme.primary,
-                                  shape: BoxShape.circle),
-                              selectedDecoration: BoxDecoration(
-                                  color: AdaptiveTheme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Theme.of(context)
-                                          .colorScheme
-                                          .onInverseSurface
-                                      : Colors.black45,
-                                  shape: BoxShape.circle),
-                              markerDecoration: BoxDecoration(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                  shape: BoxShape.circle),
+                                return esamiOggi;
+                              },
+                              calendarFormat: _calendarFormat,
+                              availableCalendarFormats: const {
+                                CalendarFormat.month: 'Questo mese',
+                                CalendarFormat.week: 'Questa settimana'
+                              },
+                              calendarStyle: CalendarStyle(
+                                todayDecoration: BoxDecoration(
+                                    color: AdaptiveTheme.of(context)
+                                                .brightness ==
+                                            Brightness.dark
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .inversePrimary
+                                        : Theme.of(context).colorScheme.primary,
+                                    shape: BoxShape.circle),
+                                selectedDecoration: BoxDecoration(
+                                    color:
+                                        AdaptiveTheme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .onInverseSurface
+                                            : Colors.black45,
+                                    shape: BoxShape.circle),
+                                markerDecoration: BoxDecoration(
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                    shape: BoxShape.circle),
+                              ),
+                              selectedDayPredicate: (day) {
+                                return isSameDay(_selectedDay, day);
+                              },
+                              onDaySelected: (selectedDay, focusedDay) {
+                                if (!isSameDay(_selectedDay, selectedDay)) {
+                                  setState(() {
+                                    _selectedDay = selectedDay;
+                                    _focusedDay = focusedDay;
+                                  });
+                                }
+                              },
+                              onFormatChanged: (format) {
+                                if (_calendarFormat != format) {
+                                  setState(() {
+                                    _calendarFormat = format;
+                                  });
+                                }
+                              },
+                              onPageChanged: (focusedDay) {
+                                _focusedDay = focusedDay;
+                              },
                             ),
-                            selectedDayPredicate: (day) {
-                              return isSameDay(_selectedDay, day);
-                            },
-                            onDaySelected: (selectedDay, focusedDay) {
-                              if (!isSameDay(_selectedDay, selectedDay)) {
-                                setState(() {
-                                  _selectedDay = selectedDay;
-                                  _focusedDay = focusedDay;
-                                });
-                              }
-                            },
-                            onFormatChanged: (format) {
-                              if (_calendarFormat != format) {
-                                setState(() {
-                                  _calendarFormat = format;
-                                });
-                              }
-                            },
-                            onPageChanged: (focusedDay) {
-                              _focusedDay = focusedDay;
-                            },
                           ),
                           Column(
                             children: [
