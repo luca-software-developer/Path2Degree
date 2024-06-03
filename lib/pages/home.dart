@@ -247,6 +247,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               splashFactory: NoSplash.splashFactory,
             ),
             child: BottomNavigationBar(
+              elevation: 0.0,
               type: BottomNavigationBarType.fixed,
               items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
