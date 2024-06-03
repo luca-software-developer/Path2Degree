@@ -5,6 +5,8 @@ import 'package:path2degree/providers/shared_preferences_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Icone relative ai temi dell'app: chiaro (sunny), scuro (brightness_2)
+/// e di sistema (auto_fix_high),
 const List<Widget> modeIcons = <Widget>[
   Icon(Icons.sunny),
   Icon(Icons.brightness_2),

@@ -1,7 +1,6 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:path2degree/model/diario.dart';
-import 'package:path2degree/model/esame.dart';
 import 'package:path2degree/providers/database_provider.dart';
 import 'package:path2degree/pages/edit_pages/edit_diario.dart';
 import 'package:path2degree/pages/add_pages/add_diario.dart';
@@ -16,24 +15,6 @@ class Diari extends StatefulWidget {
 
 class _DiariState extends State<Diari> {
   final _controller = TextEditingController();
-
-  Future<List<Diario>> _getDiari() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows = await database.query('diario');
-    return rows.map((row) => Diario(nome: row['nome'] as String)).toList();
-  }
-
-  Future<String> _getEsame(Diario diario) async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows =
-        await database.query('esame', where: "diario = '${diario.nome}'");
-    if (rows.isEmpty) {
-      return 'Non associato';
-    }
-    return Esame.fromMap(rows[0]).nome;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +37,7 @@ class _DiariState extends State<Diari> {
                   ),
                 ),
                 FutureBuilder(
-                    future: _getDiari(),
+                    future: Diario.getDiari(context),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Container();
@@ -122,7 +103,8 @@ class _DiariState extends State<Diari> {
                                                 subtitle: Opacity(
                                                     opacity: .5,
                                                     child: FutureBuilder(
-                                                        future: _getEsame(
+                                                        future: Diario.getEsame(
+                                                            context,
                                                             snapshot
                                                                 .data![index]),
                                                         builder: (context,
@@ -260,7 +242,7 @@ class _DiariState extends State<Diari> {
             onPressed: () async {
               await Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => FutureBuilder(
-                    future: _getDiari(),
+                    future: Diario.getDiari(context),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Container();

@@ -4,10 +4,13 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/timezone.dart';
 
+/// La classe EsameNotificationService realizza il servizio di notifica
+/// per gli esami.
 class EsameNotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  /// Inizializza il plug-in per le notifiche.
   Future<void> initialize() async {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
@@ -32,6 +35,7 @@ class EsameNotificationService {
     tz.initializeTimeZones();
   }
 
+  /// Schedula una notifica per un esame.
   Future<void> scheduleExamNotification(
       String nome, DateTime dataOra, String luogo) async {
     if (dataOra.isBefore(DateTime.now())) return;
@@ -47,6 +51,7 @@ class EsameNotificationService {
             UILocalNotificationDateInterpretation.absoluteTime);
   }
 
+  /// Annulla una notifica già programmata per un esame.
   Future<void> cancelExamNotification(String nome) async {
     await flutterLocalNotificationsPlugin.cancel(nome.hashCode);
   }

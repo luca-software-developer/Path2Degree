@@ -18,27 +18,6 @@ class Esami extends StatefulWidget {
 class _EsamiState extends State<Esami> {
   final _controller = TextEditingController();
 
-  Future<List<Esame>> _getEsami() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows = await database.query('esame');
-    return rows.map((row) => Esame.fromMap(row)).toList();
-  }
-
-  Future<List<Esame>> _getEsamiNonSostenuti() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows = await database.query('esame', where: 'voto IS NULL');
-    return rows.map((row) => Esame.fromMap(row)).toList();
-  }
-
-  Future<List<Esame>> _getEsamiSuperati() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows = await database.query('esame', where: 'voto IS NOT NULL');
-    return rows.map((row) => Esame.fromMap(row)).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -74,7 +53,7 @@ class _EsamiState extends State<Esami> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: FutureBuilder(
-                      future: _getEsamiNonSostenuti(),
+                      future: Esame.getEsamiNonSostenuti(context),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -194,7 +173,10 @@ class _EsamiState extends State<Esami> {
                                                                                 where: "nome = '${snapshot.data![index].nome}'");
                                                                             await database.delete('appartenenza',
                                                                                 where: "esame = '${snapshot.data![index].nome}'");
-                                                                            await database.rawDelete("DELETE FROM categoria AS C WHERE NOT EXISTS (SELECT * FROM appartenenza AS A WHERE A.categoria = C.nome)");
+                                                                            await database.rawDelete("DELETE FROM categoria AS C "
+                                                                                "WHERE NOT EXISTS ("
+                                                                                "SELECT * FROM appartenenza AS A "
+                                                                                "WHERE A.categoria = C.nome)");
                                                                             EsameNotificationService
                                                                                 service =
                                                                                 EsameNotificationService();
@@ -244,7 +226,7 @@ class _EsamiState extends State<Esami> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: FutureBuilder(
-                      future: _getEsamiSuperati(),
+                      future: Esame.getEsamiSuperati(context),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -398,7 +380,10 @@ class _EsamiState extends State<Esami> {
                                                                                 where: "nome = '${snapshot.data![index].nome}'");
                                                                             await database.delete('appartenenza',
                                                                                 where: "esame = '${snapshot.data![index].nome}'");
-                                                                            await database.rawDelete("DELETE FROM categoria AS C WHERE NOT EXISTS (SELECT * FROM appartenenza AS A WHERE A.categoria = C.nome)");
+                                                                            await database.rawDelete("DELETE FROM categoria AS C "
+                                                                                "WHERE NOT EXISTS ("
+                                                                                "SELECT * FROM appartenenza AS A "
+                                                                                "WHERE A.categoria = C.nome)");
                                                                             setState(() {});
                                                                           },
                                                                         ),
@@ -438,7 +423,7 @@ class _EsamiState extends State<Esami> {
             onPressed: () => Navigator.of(context)
                 .push(MaterialPageRoute(
                   builder: (_) => FutureBuilder(
-                      future: _getEsami(),
+                      future: Esame.getEsami(context),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {

@@ -1,4 +1,3 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path2degree/model/risorsa.dart';
 import 'package:path2degree/providers/database_provider.dart';
@@ -21,14 +20,6 @@ class _AddRisorsaState extends State<AddRisorsa> {
   final _controller = TextEditingController();
   String? _nome;
   String? _path;
-
-  Future<String?> _getPathRisorsa() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-    if (result != null) {
-      return result.files.single.path;
-    }
-    return null;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +139,7 @@ class _AddRisorsaState extends State<AddRisorsa> {
                                 child: ElevatedButton(
                                   child: const Text('Scegli'),
                                   onPressed: () async {
-                                    _path = await _getPathRisorsa();
+                                    _path = await Risorsa.showFilePicker();
                                     if (_path == null) return;
                                     setState(() => _controller.text =
                                         path.basename(_path!));

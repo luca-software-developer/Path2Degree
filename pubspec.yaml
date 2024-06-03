@@ -52,6 +52,7 @@ dependencies:
   adaptive_theme: ^3.6.0
   flutter_localizations:
     sdk: flutter
+  sqflite_common: ^2.5.4
 
 dev_dependencies:
   flutter_test:

@@ -19,8 +19,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  /// Controller per la PageView, la pagina 2 corrisponde
+  /// alla Dashboard (default).
   final _pageViewController = PageController(initialPage: 2);
   int _selectedIndex = 2;
+
+  /// Titoli delle 5 schermate principali.
   static const List<String> _widgetTitles = <String>[
     'Categorie',
     'Statistiche',
@@ -28,6 +32,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     'Diari',
     'Esami'
   ];
+
+  /// Widget delle 5 schermate principali.
   static const List<Widget> _widgetOptions = <Widget>[
     Categorie(),
     Statistiche(),
@@ -35,7 +41,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     Diari(),
     Esami()
   ];
+
+  /// Controller per l'animazione all'interno del drawer.
   late AnimationController _controller;
+
+  /// Path dell'icona da mostrare all'interno del drawer.
   final String iconPath = 'assets/images/icon.png';
 
   @override
@@ -51,6 +61,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
+  /// Gestisce il tap su un item della bottom bar.
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;

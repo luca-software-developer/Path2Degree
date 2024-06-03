@@ -18,18 +18,10 @@ class _EditAppuntoState extends State<EditAppunto> {
   final _controller = TextEditingController();
   String? _nome;
 
-  Future<String> _getTesto() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows =
-        await database.query('appunto', where: "nome = '${widget.nome}'");
-    return rows[0]['testo'] as String;
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: _getTesto(),
+        future: Appunto.getTesto(context, widget.nome),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// La classe ChartColors fornisce i colori standard per i grafici.
 class ChartColors {
   static const Color primary = contentColorCyan;
   static const Color menuBackground = Color(0xFF090912);

@@ -25,32 +25,6 @@ class _EditDiarioState extends State<EditDiario> {
   List<Appunto> _appunti = [];
   List<Risorsa> _risorse = [];
 
-  Future<List<Appunto>> _getAppunti() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows =
-        await database.query('appunto', where: "diario = '${widget.diario}'");
-    return rows
-        .map((row) => Appunto(
-            nome: row['nome'] as String,
-            testo: row['testo'] as String,
-            diario: row['diario'] as String))
-        .toList();
-  }
-
-  Future<List<Risorsa>> _getRisorse() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows =
-        await database.query('risorsa', where: "diario = '${widget.diario}'");
-    return rows
-        .map((row) => Risorsa(
-            nome: row['nome'] as String,
-            path: row['path'] as String,
-            diario: row['diario'] as String))
-        .toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -89,7 +63,7 @@ class _EditDiarioState extends State<EditDiario> {
                   ),
                 ),
                 FutureBuilder(
-                    future: _getAppunti(),
+                    future: Appunto.getAppunti(context, widget.diario),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Container();
@@ -235,7 +209,7 @@ class _EditDiarioState extends State<EditDiario> {
                   ),
                 ),
                 FutureBuilder(
-                    future: _getRisorse(),
+                    future: Risorsa.getRisorse(context, widget.diario),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Container();

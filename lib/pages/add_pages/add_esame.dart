@@ -21,14 +21,20 @@ class AddEsame extends StatefulWidget {
 
 class _AddEsameState extends State<AddEsame> {
   final _formKey = GlobalKey<FormState>();
+
+  // Controller per l'inserimento di data, ora e categoria.
   final _dateController = TextEditingController();
   final _timeController = TextEditingController();
   final _categoriaController = TextEditingController();
+
+  // Valori selezionati dall'utente.
   final List<String> _selectedCategorie = [];
   String? _selectedVoto;
   Tipologia _selectedTipologia = Tipologia.scrittoOrale;
   String? _selectedDiario;
   List<Map<String, Object?>> _diari = [];
+
+  //  Tipologie di esame rappresentate come stringhe.
   final Map<Tipologia, String> _tipologie = {
     Tipologia.orale: 'Orale',
     Tipologia.scritto: 'Scritto',
@@ -36,6 +42,7 @@ class _AddEsameState extends State<AddEsame> {
   };
   String? _nuovoDiario;
 
+  //  Dati dell'esame.
   String? _nome;
   String? _corsoDiStudi;
   int? _cfu;
@@ -48,12 +55,6 @@ class _AddEsameState extends State<AddEsame> {
   bool? _lode;
   final List<Categoria> _categorie = [];
   Diario? _diario;
-
-  Future<List<Map<String, Object?>>> _getDiari(databaseProvider) async {
-    Database database = await databaseProvider.database;
-    return database.rawQuery(
-        'SELECT * FROM diario AS D WHERE NOT EXISTS (SELECT * FROM esame AS E WHERE E.diario = D.nome)');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -561,7 +562,7 @@ class _AddEsameState extends State<AddEsame> {
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
                             child: FutureBuilder(
-                                future: _getDiari(databaseProvider),
+                                future: Diario.getDiariAssegnabili(context),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {

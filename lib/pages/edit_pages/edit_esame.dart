@@ -27,14 +27,20 @@ class EditEsame extends StatefulWidget {
 
 class _EditEsameState extends State<EditEsame> {
   final _formKey = GlobalKey<FormState>();
+
+  // Controller per l'inserimento di data, ora e categoria.
   final _dateController = TextEditingController();
   final _timeController = TextEditingController();
   final _categoriaController = TextEditingController();
+
+  // Valori selezionati dall'utente.
   List<String> _selectedCategorie = [];
   String? _selectedVoto;
   Tipologia _selectedTipologia = Tipologia.scrittoOrale;
   String? _selectedDiario;
   List<Map<String, Object?>> _diari = [];
+
+  //  Tipologie di esame rappresentate come stringhe.
   final Map<Tipologia, String> _tipologie = {
     Tipologia.orale: 'Orale',
     Tipologia.scritto: 'Scritto',
@@ -42,6 +48,7 @@ class _EditEsameState extends State<EditEsame> {
   };
   String? _nuovoDiario;
 
+  //  Dati dell'esame.
   String? _nome;
   String? _corsoDiStudi;
   int? _cfu;
@@ -59,20 +66,7 @@ class _EditEsameState extends State<EditEsame> {
 
   final _scrollController = ScrollController();
 
-  Future<List<String>> _getCategorie() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows =
-        await database.query('appartenenza', where: "esame = '${widget.nome}'");
-    return rows.map((row) => row['categoria'] as String).toList();
-  }
-
-  Future<List<Map<String, Object?>>> _getDiari(databaseProvider) async {
-    Database database = await databaseProvider.database;
-    return database.rawQuery(
-        'SELECT * FROM diario AS D WHERE nome = \'${_esame.diario}\' OR NOT EXISTS (SELECT * FROM esame AS E WHERE E.diario = D.nome)');
-  }
-
+  ///  Restituisce la rappresentazione HH:mm di un oggetto TimeOfDay.
   String getFormattedTime(TimeOfDay time) {
     DateTime now = DateTime.now();
     DateTime today = DateTime(now.year, now.month, now.day);
@@ -484,7 +478,7 @@ class _EditEsameState extends State<EditEsame> {
                     ),
                   ),
                   FutureBuilder(
-                      future: _getCategorie(),
+                      future: Esame.getCategorieEsame(context, widget.nome),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -666,7 +660,8 @@ class _EditEsameState extends State<EditEsame> {
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),
                             child: FutureBuilder(
-                                future: _getDiari(databaseProvider),
+                                future: Diario.getDiariRiassegnabili(
+                                    context, _esame.diario),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {

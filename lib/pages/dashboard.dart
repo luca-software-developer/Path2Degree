@@ -5,7 +5,6 @@ import 'package:path2degree/model/diario.dart';
 import 'package:path2degree/model/esame.dart';
 import 'package:path2degree/pages/add_pages/add_diario.dart';
 import 'package:path2degree/pages/add_pages/add_esame.dart';
-import 'package:path2degree/providers/database_provider.dart';
 import 'package:path2degree/providers/shared_preferences_provider.dart';
 import 'package:path2degree/widgets/action_button.dart';
 import 'package:path2degree/widgets/expandable_fab.dart';
@@ -26,45 +25,13 @@ class _DashboardState extends State<Dashboard>
   DateTime? _selectedDay;
   List<Esame> esamiPromemoria = [];
 
-  Future<List<Diario>> _getDiari() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows = await database.query('diario');
-    return rows.map((row) => Diario(nome: row['nome'] as String)).toList();
-  }
-
-  Future<List<Esame>> _getEsami() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows = await database.query('esame');
-    return rows.map((row) => Esame.fromMap(row)).toList();
-  }
-
-  Future<List<Esame>> _getEsamiNonSostenuti() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows = await database.query('esame', where: 'voto IS NULL');
-    return rows.map((row) => Esame.fromMap(row)).toList();
-  }
-
-  List<Esame> _getEsamiPrimaDel(List<Esame> esami, DateTime data) {
-    List<Esame> promemoria = [];
-    for (final esame in esami) {
-      if (esame.dataOra.isBefore(data)) {
-        promemoria.add(esame);
-      }
-    }
-    promemoria.sort((e1, e2) => e1.dataOra.compareTo(e2.dataOra));
-    return promemoria.sublist(0, promemoria.length > 3 ? 3 : promemoria.length);
-  }
-
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
         valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,
         builder: (_, mode, child) {
           return FutureBuilder(
-              future: _getEsamiNonSostenuti(),
+              future: Esame.getEsamiNonSostenuti(context),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Text(snapshot.error.toString());
@@ -158,7 +125,7 @@ class _DashboardState extends State<Dashboard>
                                 }
                                 final data =
                                     DateTime.parse(prefs.dataPromemoria!);
-                                esamiPromemoria = _getEsamiPrimaDel(
+                                esamiPromemoria = Esame.getEsamiPrimaDel(
                                     snapshot.data ?? [], data);
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,7 +230,7 @@ class _DashboardState extends State<Dashboard>
                           onPressed: () =>
                               Navigator.of(context).push(MaterialPageRoute(
                             builder: (_) => FutureBuilder(
-                                future: _getDiari(),
+                                future: Diario.getDiari(context),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
@@ -281,7 +248,7 @@ class _DashboardState extends State<Dashboard>
                           onPressed: () =>
                               Navigator.of(context).push(MaterialPageRoute(
                             builder: (_) => FutureBuilder(
-                                future: _getEsami(),
+                                future: Esame.getEsami(context),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {

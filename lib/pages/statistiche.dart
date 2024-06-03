@@ -8,6 +8,7 @@ import 'package:path2degree/providers/database_provider.dart';
 import 'package:path2degree/utils/chart_colors.dart';
 import 'package:path2degree/widgets/chart.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 class Statistiche extends StatefulWidget {
   const Statistiche({super.key});
@@ -21,64 +22,56 @@ class _StatisticheState extends State<Statistiche> {
   List<Categoria> _categorie = [];
   Categoria? _categoria;
 
+  /// Restituisce le righe della tabella esame corrispondenti ad esami con voto.
+  Future<List<Map<String, Object?>>> _getRows() async {
+    Database database = await DatabaseProvider.getDatabase(context);
+    final rows = await database.query('esame', where: 'voto IS NOT NULL');
+    return rows;
+  }
+
+  /// Restituisce una lista di voti da 0 a 31 (30L).
+  Future<List<int>> _getVoti() async {
+    List<Map<String, Object?>> rows = await _getRows();
+    List<int> voti = rows.map((row) {
+      int voto = row['voto'] as int;
+      bool lode = (row['lode'] as int) == 1;
+      if (lode) {
+        voto++;
+      }
+      return voto;
+    }).toList();
+    return voti;
+  }
+
+  /// Restituisce il voto massimo.
   Future<String> _getVotoMassimo() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows = await database.query('esame', where: 'voto IS NOT NULL');
-    List<int> voti = rows.map((row) {
-      int voto = row['voto'] as int;
-      bool lode = (row['lode'] as int) == 1;
-      if (lode) {
-        voto++;
-      }
-      return voto;
-    }).toList();
+    List<int> voti = await _getVoti();
     if (voti.isEmpty) {
       return '0';
     }
-    int max = voti[0];
-    for (final voto in voti) {
-      if (voto > max) {
-        max = voto;
-      }
-    }
-    if (max == 31) {
+    int maxVoto = voti.reduce(max);
+    if (maxVoto == 31) {
       return '30L';
     }
-    return max.toString();
+    return maxVoto.toString();
   }
 
+  /// Restituisce il voto minimo.
   Future<String> _getVotoMinimo() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows = await database.query('esame', where: 'voto IS NOT NULL');
-    List<int> voti = rows.map((row) {
-      int voto = row['voto'] as int;
-      bool lode = (row['lode'] as int) == 1;
-      if (lode) {
-        voto++;
-      }
-      return voto;
-    }).toList();
+    List<int> voti = await _getVoti();
     if (voti.isEmpty) {
       return '0';
     }
-    int min = voti[0];
-    for (final voto in voti) {
-      if (voto < min) {
-        min = voto;
-      }
-    }
-    if (min == 31) {
+    int maxVoto = voti.reduce(min);
+    if (maxVoto == 31) {
       return '30L';
     }
-    return min.toString();
+    return maxVoto.toString();
   }
 
+  /// Restituisce la media ponderata dei voti rispetto ai CFU.
   Future<String> _getMediaPonderata() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows = await database.query('esame', where: 'voto IS NOT NULL');
+    List<Map<String, Object?>> rows = await _getRows();
     if (rows.isEmpty) {
       return 0.toString();
     }
@@ -94,10 +87,9 @@ class _StatisticheState extends State<Statistiche> {
     return mediaPonderata.toStringAsFixed(1);
   }
 
+  /// Restituisce la media aritmetica dei voti.
   Future<String> _getMediaAritmetica() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows = await database.query('esame', where: 'voto IS NOT NULL');
+    List<Map<String, Object?>> rows = await _getRows();
     if (rows.isEmpty) {
       return 0.toString();
     }
@@ -110,6 +102,7 @@ class _StatisticheState extends State<Statistiche> {
     return mediaAritmetica.toStringAsFixed(1);
   }
 
+  /// Restituisce il voto di laurea di base corrente.
   Future<String> _getVotoLaurea() async {
     return (double.parse(await _getMediaPonderata()) * 4.1 - 7.8)
         .round()
@@ -117,19 +110,21 @@ class _StatisticheState extends State<Statistiche> {
         .toString();
   }
 
+  /// Restituisce la "Top 3" degli esami con i voti più alti.
   Future<List<Esame>> _getTop3() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
+    Database database = await DatabaseProvider.getDatabase(context);
     final rows = await database.query('esame',
         where: 'voto IS NOT NULL', orderBy: 'voto DESC, lode DESC', limit: 3);
     return rows.map((row) => Esame.fromMap(row)).toList();
   }
 
+  /// Restituisce le medie per ciascuna categoria.
   Future<List<Map<String, String>>> _getMediaPerCategoria() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows = await database.rawQuery(
-        "SELECT A.categoria AS categoria, AVG(E.voto) AS votoMedio FROM esame AS E JOIN appartenenza AS A ON (E.nome = A.esame) GROUP BY A.categoria");
+    Database database = await DatabaseProvider.getDatabase(context);
+    final rows = await database
+        .rawQuery("SELECT A.categoria AS categoria, AVG(E.voto) AS votoMedio "
+            "FROM esame AS E JOIN appartenenza AS A ON (E.nome = A.esame) "
+            "GROUP BY A.categoria");
     return rows
         .map((row) => {
               'categoria': row['categoria'] as String,
@@ -139,19 +134,23 @@ class _StatisticheState extends State<Statistiche> {
         .toList();
   }
 
+  /// Restituisce le categorie.
   Future<List<Categoria>> _getCategorie() async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
+    Database database = await DatabaseProvider.getDatabase(context);
     final rows = await database.query('categoria', orderBy: 'nome');
     return rows.map((row) => Categoria(nome: row['nome'] as String)).toList();
   }
 
+  /// Restituisce la lista di punti corrispondente all'evoluzione dei voti
+  /// per la categoria data.
   Future<List<double>> _getEvoluzioneVotiPerCategoria(
       Categoria categoria) async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows = await database.rawQuery(
-        "SELECT * FROM esame AS E WHERE EXISTS (SELECT * FROM appartenenza AS A WHERE E.nome = A.esame AND A.categoria = '${categoria.nome}') ORDER BY E.dataOra");
+    Database database = await DatabaseProvider.getDatabase(context);
+    final rows = await database.rawQuery("SELECT * FROM esame AS E "
+        "WHERE EXISTS ("
+        "SELECT * FROM appartenenza AS A "
+        "WHERE E.nome = A.esame AND A.categoria = '${categoria.nome}') "
+        "ORDER BY E.dataOra");
     List<double> voti = [];
     for (final row in rows) {
       if (row['voto'] == null) {
@@ -162,12 +161,16 @@ class _StatisticheState extends State<Statistiche> {
     return voti;
   }
 
+  /// Restituisce la lista di punti corrispondente all'evoluzione della media
+  /// per la categoria data.
   Future<List<double>> _getEvoluzioneMediaPerCategoria(
       Categoria categoria) async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows = await database.rawQuery(
-        "SELECT * FROM esame AS E WHERE EXISTS (SELECT * FROM appartenenza AS A WHERE E.nome = A.esame AND A.categoria = '${categoria.nome}') ORDER BY E.dataOra");
+    Database database = await DatabaseProvider.getDatabase(context);
+    final rows = await database.rawQuery("SELECT * FROM esame AS E "
+        "WHERE EXISTS ("
+        "SELECT * FROM appartenenza AS A "
+        "WHERE E.nome = A.esame AND A.categoria = '${categoria.nome}') "
+        "ORDER BY E.dataOra");
     List<int> voti = [];
     List<double> evoluzioneMedia = [];
     for (final row in rows) {
@@ -185,12 +188,16 @@ class _StatisticheState extends State<Statistiche> {
     return evoluzioneMedia;
   }
 
+  /// Restituisce la lista di punti corrispondente all'evoluzione
+  /// del voto massimo per la categoria data.
   Future<List<double>> _getEvoluzioneVotoMassimoPerCategoria(
       Categoria categoria) async {
-    final provider = Provider.of<DatabaseProvider>(context, listen: false);
-    final database = await provider.database;
-    final rows = await database.rawQuery(
-        "SELECT * FROM esame AS E WHERE EXISTS (SELECT * FROM appartenenza AS A WHERE E.nome = A.esame AND A.categoria = '${categoria.nome}') ORDER BY E.dataOra");
+    Database database = await DatabaseProvider.getDatabase(context);
+    final rows = await database.rawQuery("SELECT * FROM esame AS E "
+        "WHERE EXISTS ("
+        "SELECT * FROM appartenenza AS A "
+        "WHERE E.nome = A.esame AND A.categoria = '${categoria.nome}') "
+        "ORDER BY E.dataOra");
     List<int> voti = [];
     List<double> evoluzioneVotoMassimo = [];
     for (final row in rows) {
@@ -203,12 +210,17 @@ class _StatisticheState extends State<Statistiche> {
     return evoluzioneVotoMassimo;
   }
 
+  /// Restituisce la lista di punti corrispondente all'evoluzione
+  /// del voto minimo per la categoria data.
   Future<List<double>> _getEvoluzioneVotoMinimoPerCategoria(
       Categoria categoria) async {
     final provider = Provider.of<DatabaseProvider>(context, listen: false);
     final database = await provider.database;
-    final rows = await database.rawQuery(
-        "SELECT * FROM esame AS E WHERE EXISTS (SELECT * FROM appartenenza AS A WHERE E.nome = A.esame AND A.categoria = '${categoria.nome}') ORDER BY E.dataOra");
+    final rows = await database.rawQuery("SELECT * FROM esame AS E "
+        "WHERE EXISTS ("
+        "SELECT * FROM appartenenza AS A "
+        "WHERE E.nome = A.esame AND A.categoria = '${categoria.nome}') "
+        "ORDER BY E.dataOra");
     List<int> voti = [];
     List<double> evoluzioneVotoMinimo = [];
     for (final row in rows) {
