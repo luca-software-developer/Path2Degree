@@ -172,44 +172,69 @@ class _DiariState extends State<Diari> {
                                                                 .database
                                                                 .then(
                                                                     (database) {
-                                                              showDialog(
-                                                                  context:
-                                                                      context,
-                                                                  builder:
-                                                                      (BuildContext
-                                                                          context) {
-                                                                    return AlertDialog(
-                                                                      title: const Text(
-                                                                          'Elimina diario'),
-                                                                      content: Text(
-                                                                          'Sei sicuro di voler eliminare il diario "${snapshot.data![index].nome}"'),
-                                                                      actions: <Widget>[
-                                                                        TextButton(
-                                                                          child:
-                                                                              const Text('Sì'),
-                                                                          onPressed:
-                                                                              () async {
-                                                                            Navigator.of(context).pop();
-                                                                            await database.delete('diario',
-                                                                                where: "nome = '${snapshot.data![index].nome}'");
-                                                                            await database.delete('appunto',
-                                                                                where: "diario = '${snapshot.data![index].nome}'");
-                                                                            await database.delete('risorsa',
-                                                                                where: "diario = '${snapshot.data![index].nome}'");
-                                                                            setState(() {});
-                                                                          },
-                                                                        ),
-                                                                        TextButton(
-                                                                          child:
-                                                                              const Text('No'),
-                                                                          onPressed:
-                                                                              () {
-                                                                            Navigator.of(context).pop();
-                                                                          },
-                                                                        ),
-                                                                      ],
-                                                                    );
-                                                                  });
+                                                              database
+                                                                  .query(
+                                                                      'esame',
+                                                                      where:
+                                                                          "diario = '${snapshot.data![index].nome}'")
+                                                                  .then((rows) {
+                                                                if (rows
+                                                                    .isEmpty) {
+                                                                  showDialog(
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (BuildContext
+                                                                              context) {
+                                                                        return AlertDialog(
+                                                                          title:
+                                                                              const Text('Elimina diario'),
+                                                                          content:
+                                                                              Text('Sei sicuro di voler eliminare il diario "${snapshot.data![index].nome}"'),
+                                                                          actions: <Widget>[
+                                                                            TextButton(
+                                                                              child: const Text('Sì'),
+                                                                              onPressed: () async {
+                                                                                Navigator.of(context).pop();
+                                                                                await database.delete('diario', where: "nome = '${snapshot.data![index].nome}'");
+                                                                                await database.delete('appunto', where: "diario = '${snapshot.data![index].nome}'");
+                                                                                await database.delete('risorsa', where: "diario = '${snapshot.data![index].nome}'");
+                                                                                setState(() {});
+                                                                              },
+                                                                            ),
+                                                                            TextButton(
+                                                                              child: const Text('No'),
+                                                                              onPressed: () {
+                                                                                Navigator.of(context).pop();
+                                                                              },
+                                                                            ),
+                                                                          ],
+                                                                        );
+                                                                      });
+                                                                } else {
+                                                                  showDialog(
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (BuildContext
+                                                                              context) {
+                                                                        return AlertDialog(
+                                                                          title:
+                                                                              const Text('Diario in uso'),
+                                                                          content:
+                                                                              const Text('Questo diario è associato a un esame. Non puoi eliminarlo!'),
+                                                                          actions: <Widget>[
+                                                                            TextButton(
+                                                                              child: const Text('OK'),
+                                                                              onPressed: () {
+                                                                                Navigator.of(context).pop();
+                                                                              },
+                                                                            ),
+                                                                          ],
+                                                                        );
+                                                                      });
+                                                                }
+                                                              });
                                                             });
                                                           },
                                                           icon: const Icon(Icons
