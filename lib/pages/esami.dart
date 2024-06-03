@@ -428,6 +428,9 @@ class _EsamiState extends State<Esami> {
                         }
                       }),
                 ),
+                const SizedBox(
+                  height: 80.0,
+                )
               ],
             ),
           ),
