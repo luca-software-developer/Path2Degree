@@ -57,6 +57,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
+    _pageViewController.dispose();
     _controller.dispose();
     super.dispose();
   }

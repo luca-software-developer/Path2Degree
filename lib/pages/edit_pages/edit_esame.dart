@@ -100,6 +100,15 @@ class _EditEsameState extends State<EditEsame> {
   }
 
   @override
+  void dispose() {
+    _dateController.dispose();
+    _timeController.dispose();
+    _categoriaController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final databaseProvider = Provider.of<DatabaseProvider>(context);
     return Container(

@@ -22,6 +22,12 @@ class _AddRisorsaState extends State<AddRisorsa> {
   String? _path;
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _controller.text =
         _path != null ? path.basename(_path!) : 'Nessun file selezionato';

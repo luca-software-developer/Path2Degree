@@ -26,6 +26,12 @@ class _EditDiarioState extends State<EditDiario> {
   List<Risorsa> _risorse = [];
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).colorScheme.surface,

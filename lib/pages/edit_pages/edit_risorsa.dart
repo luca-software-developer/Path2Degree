@@ -27,6 +27,12 @@ class _EditRisorsaState extends State<EditRisorsa> {
   String? _path;
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _nome = widget.nome;
     return FutureBuilder(

@@ -19,6 +19,12 @@ class _EditAppuntoState extends State<EditAppunto> {
   String? _nome;
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: Appunto.getTesto(context, widget.nome),

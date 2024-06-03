@@ -57,6 +57,14 @@ class _AddEsameState extends State<AddEsame> {
   Diario? _diario;
 
   @override
+  void dispose() {
+    _dateController.dispose();
+    _timeController.dispose();
+    _categoriaController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final databaseProvider = Provider.of<DatabaseProvider>(context);
     return Container(

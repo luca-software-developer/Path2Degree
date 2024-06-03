@@ -19,6 +19,12 @@ class _EsamiState extends State<Esami> {
   final _controller = TextEditingController();
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: AdaptiveTheme.of(context).modeChangeNotifier,

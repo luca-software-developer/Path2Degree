@@ -26,6 +26,12 @@ class _ImpostazioniState extends State<Impostazioni> {
   DateTime? data;
 
   @override
+  void dispose() {
+    _dateController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final List<bool> selectedMode = <bool>[
       AdaptiveTheme.of(context).mode == AdaptiveThemeMode.light,
