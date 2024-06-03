@@ -9,6 +9,8 @@ class Informazioni extends StatefulWidget {
 }
 
 class _InformazioniState extends State<Informazioni> {
+  final String iconPath = 'assets/images/icon.png';
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -34,9 +36,7 @@ class _InformazioniState extends State<Informazioni> {
                         children: <Widget>[
                           SizedBox(
                             width: 144,
-                            child: Image.asset(
-                              'assets/images/icon.png',
-                            ),
+                            child: Image.asset(iconPath),
                           )
                         ],
                       ),
