@@ -54,7 +54,8 @@ class _DashboardState extends State<Dashboard>
         promemoria.add(esame);
       }
     }
-    return promemoria;
+    promemoria.sort((e1, e2) => e1.dataOra.compareTo(e2.dataOra));
+    return promemoria.sublist(0, promemoria.length > 3 ? 3 : promemoria.length);
   }
 
   @override

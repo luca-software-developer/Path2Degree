@@ -87,28 +87,31 @@ LineChartData mainData(List<double> voti, List<Color> colors) {
     ),
     minY: 18,
     maxY: 30,
-    lineBarsData: [
-      LineChartBarData(
-        spots: voti
-            .asMap()
-            .entries
-            .map((entry) => FlSpot(entry.key.toDouble(), entry.value))
-            .toList(),
-        gradient: LinearGradient(
-          colors: colors,
-        ),
-        barWidth: 5,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(
-          show: true,
-        ),
-        belowBarData: BarAreaData(
-          show: true,
-          gradient: LinearGradient(
-            colors: colors.map((color) => color.withOpacity(0.3)).toList(),
-          ),
-        ),
-      ),
-    ],
+    lineBarsData: voti.isEmpty
+        ? []
+        : [
+            LineChartBarData(
+              spots: voti
+                  .asMap()
+                  .entries
+                  .map((entry) => FlSpot(entry.key.toDouble(), entry.value))
+                  .toList(),
+              gradient: LinearGradient(
+                colors: colors,
+              ),
+              barWidth: 5,
+              isStrokeCapRound: true,
+              dotData: const FlDotData(
+                show: true,
+              ),
+              belowBarData: BarAreaData(
+                show: true,
+                gradient: LinearGradient(
+                  colors:
+                      colors.map((color) => color.withOpacity(0.3)).toList(),
+                ),
+              ),
+            ),
+          ],
   );
 }

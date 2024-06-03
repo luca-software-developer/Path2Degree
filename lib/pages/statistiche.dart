@@ -146,6 +146,22 @@ class _StatisticheState extends State<Statistiche> {
     return rows.map((row) => Categoria(nome: row['nome'] as String)).toList();
   }
 
+  Future<List<double>> _getEvoluzioneVotiPerCategoria(
+      Categoria categoria) async {
+    final provider = Provider.of<DatabaseProvider>(context, listen: false);
+    final database = await provider.database;
+    final rows = await database.rawQuery(
+        "SELECT * FROM esame AS E WHERE EXISTS (SELECT * FROM appartenenza AS A WHERE E.nome = A.esame AND A.categoria = '${categoria.nome}') ORDER BY E.dataOra");
+    List<double> voti = [];
+    for (final row in rows) {
+      if (row['voto'] == null) {
+        continue;
+      }
+      voti.add(double.parse(row['voto'].toString()));
+    }
+    return voti;
+  }
+
   Future<List<double>> _getEvoluzioneMediaPerCategoria(
       Categoria categoria) async {
     final provider = Provider.of<DatabaseProvider>(context, listen: false);
@@ -843,6 +859,48 @@ class _StatisticheState extends State<Statistiche> {
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Text('Grafico dei voti',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(fontWeight: FontWeight.bold)),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Opacity(
+                                opacity: .5,
+                                child: Text(
+                                    'I tuoi voti in \'${_categoria?.nome}\'!',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium),
+                              ),
+                            ),
+
+                            //
+
+                            FutureBuilder(
+                                future:
+                                    _getEvoluzioneVotiPerCategoria(_categoria!),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    return Text(snapshot.error.toString());
+                                  } else {
+                                    return Chart(
+                                      voti: snapshot.data ?? [],
+                                      colors: const [
+                                        ChartColors.contentColorPurple,
+                                        ChartColors.contentColorBlue,
+                                      ],
+                                    );
+                                  }
+                                }),
+
+                            //
+
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 16.0),
