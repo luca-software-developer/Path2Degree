@@ -388,18 +388,24 @@ class _AddEsameState extends State<AddEsame> {
                                       border: OutlineInputBorder(),
                                       labelText: 'Voto',
                                     ),
-                                    items: [
-                                      const DropdownMenuItem<String>(
-                                          value: '', child: Text('N/A')),
-                                      ...List.generate(
-                                          13,
-                                          (index) => DropdownMenuItem<String>(
-                                              value: (18 + index).toString(),
-                                              child: Text(
-                                                  (18 + index).toString()))),
-                                      const DropdownMenuItem<String>(
-                                          value: '30L', child: Text('30L'))
-                                    ].reversed.toList(),
+                                    items: _data?.isAfter(DateTime.now()) ??
+                                            false
+                                        ? []
+                                        : [
+                                            const DropdownMenuItem<String>(
+                                                value: '', child: Text('N/A')),
+                                            ...List.generate(
+                                                13,
+                                                (index) =>
+                                                    DropdownMenuItem<String>(
+                                                        value: (18 + index)
+                                                            .toString(),
+                                                        child: Text((18 + index)
+                                                            .toString()))),
+                                            const DropdownMenuItem<String>(
+                                                value: '30L',
+                                                child: Text('30L'))
+                                          ].reversed.toList(),
                                     value: _selectedVoto,
                                     onChanged: (value) => _selectedVoto = value,
                                   ),

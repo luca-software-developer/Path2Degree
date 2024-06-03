@@ -436,18 +436,24 @@ class _EditEsameState extends State<EditEsame> {
                                       border: OutlineInputBorder(),
                                       labelText: 'Voto',
                                     ),
-                                    items: [
-                                      const DropdownMenuItem<String>(
-                                          value: '', child: Text('N/A')),
-                                      ...List.generate(
-                                          13,
-                                          (index) => DropdownMenuItem<String>(
-                                              value: (18 + index).toString(),
-                                              child: Text(
-                                                  (18 + index).toString()))),
-                                      const DropdownMenuItem<String>(
-                                          value: '30L', child: Text('30L'))
-                                    ].reversed.toList(),
+                                    items: _data?.isAfter(DateTime.now()) ??
+                                            false
+                                        ? []
+                                        : [
+                                            const DropdownMenuItem<String>(
+                                                value: '', child: Text('N/A')),
+                                            ...List.generate(
+                                                13,
+                                                (index) =>
+                                                    DropdownMenuItem<String>(
+                                                        value: (18 + index)
+                                                            .toString(),
+                                                        child: Text((18 + index)
+                                                            .toString()))),
+                                            const DropdownMenuItem<String>(
+                                                value: '30L',
+                                                child: Text('30L'))
+                                          ].reversed.toList(),
                                     value: _selectedVoto,
                                     onChanged: (value) => _selectedVoto = value,
                                   ),
@@ -800,8 +806,16 @@ class _EditEsameState extends State<EditEsame> {
                                             'luogo': _luogo!,
                                             'tipologia': _tipologia!.name,
                                             'docente': _docente!,
-                                            'voto': _voto,
-                                            'lode': _lode == true ? 1 : 0,
+                                            'voto': _data?.isAfter(
+                                                        DateTime.now()) ??
+                                                    false
+                                                ? null
+                                                : _voto,
+                                            'lode': _data?.isAfter(
+                                                        DateTime.now()) ??
+                                                    false
+                                                ? null
+                                                : (_lode == true ? 1 : 0),
                                             'diario': _diario!
                                           },
                                           where: "nome = '${_esame.nome}'",
