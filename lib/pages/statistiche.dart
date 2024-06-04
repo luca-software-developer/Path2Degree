@@ -844,6 +844,8 @@ class _StatisticheState extends State<Statistiche> {
                                     value: _categoria,
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 14),
                                       labelText: 'Categoria',
                                     ),
                                     onChanged: (Categoria? newValue) {

@@ -331,6 +331,8 @@ class _AddEsameState extends State<AddEsame> {
                                 value: _selectedTipologia,
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 14),
                                   labelText: 'Tipologia',
                                 ),
                                 onChanged: (Tipologia? newValue) {
@@ -389,6 +391,8 @@ class _AddEsameState extends State<AddEsame> {
                                   },
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 14),
                                     labelText: 'Voto',
                                   ),
                                   items: _data?.isAfter(DateTime.now()) ?? false
@@ -599,6 +603,8 @@ class _AddEsameState extends State<AddEsame> {
                                     value: _selectedDiario,
                                     decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 14),
                                       labelText: 'Diario',
                                     ),
                                     onChanged: (String? newValue) {
