@@ -7,9 +7,8 @@ import 'package:path2degree/pages/edit_pages/edit_risorsa.dart';
 import 'package:path2degree/providers/database_provider.dart';
 import 'package:path2degree/pages/add_pages/add_appunto.dart';
 import 'package:provider/provider.dart';
-import 'package:path2degree/widgets/action_button.dart';
-import 'package:path2degree/widgets/expandable_fab.dart';
 import 'package:open_file_plus/open_file_plus.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 
 class EditDiario extends StatefulWidget {
   const EditDiario({super.key, required this.diario});
@@ -21,6 +20,7 @@ class EditDiario extends StatefulWidget {
 }
 
 class _EditDiarioState extends State<EditDiario> {
+  final _key = GlobalKey<ExpandableFabState>();
   final _controller = TextEditingController();
   List<Appunto> _appunti = [];
   List<Risorsa> _risorse = [];
@@ -369,10 +369,24 @@ class _EditDiarioState extends State<EditDiario> {
           ),
         ),
       ),
+      floatingActionButtonLocation: ExpandableFab.location,
       floatingActionButton: ExpandableFab(
+        key: _key,
+        openButtonBuilder: DefaultFloatingActionButtonBuilder(
+          child: const Icon(Icons.add_rounded),
+        ),
+        closeButtonBuilder: DefaultFloatingActionButtonBuilder(
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          shape: const CircleBorder(),
+          fabSize: ExpandableFabSize.small,
+          child: const Icon(Icons.close_rounded),
+        ),
         distance: 112,
         children: [
-          ActionButton(
+          FloatingActionButton.small(
+            heroTag: null,
+            shape: const CircleBorder(),
             onPressed: () async {
               await Navigator.of(context).push(MaterialPageRoute(
                   builder: (_) => AddAppunto(
@@ -381,9 +395,11 @@ class _EditDiarioState extends State<EditDiario> {
                       )));
               setState(() {});
             },
-            icon: const Icon(Icons.note_rounded),
+            child: const Icon(Icons.note_rounded),
           ),
-          ActionButton(
+          FloatingActionButton.small(
+            heroTag: null,
+            shape: const CircleBorder(),
             onPressed: () async {
               await Navigator.of(context).push(MaterialPageRoute(
                   builder: (_) => AddRisorsa(
@@ -392,7 +408,7 @@ class _EditDiarioState extends State<EditDiario> {
                       )));
               setState(() {});
             },
-            icon: const Icon(Icons.attach_file),
+            child: const Icon(Icons.attach_file),
           ),
         ],
       ),

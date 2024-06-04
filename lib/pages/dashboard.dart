@@ -6,10 +6,9 @@ import 'package:path2degree/model/esame.dart';
 import 'package:path2degree/pages/add_pages/add_diario.dart';
 import 'package:path2degree/pages/add_pages/add_esame.dart';
 import 'package:path2degree/providers/shared_preferences_provider.dart';
-import 'package:path2degree/widgets/action_button.dart';
-import 'package:path2degree/widgets/expandable_fab.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -20,6 +19,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard>
     with SingleTickerProviderStateMixin {
+  final _key = GlobalKey<ExpandableFabState>();
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -223,10 +223,25 @@ class _DashboardState extends State<Dashboard>
                         ],
                       ),
                     ),
+                    floatingActionButtonLocation: ExpandableFab.location,
                     floatingActionButton: ExpandableFab(
+                      key: _key,
+                      openButtonBuilder: DefaultFloatingActionButtonBuilder(
+                        child: const Icon(Icons.add_rounded),
+                      ),
+                      closeButtonBuilder: DefaultFloatingActionButtonBuilder(
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        shape: const CircleBorder(),
+                        fabSize: ExpandableFabSize.small,
+                        child: const Icon(Icons.close_rounded),
+                      ),
                       distance: 112,
                       children: [
-                        ActionButton(
+                        FloatingActionButton.small(
+                          heroTag: null,
+                          shape: const CircleBorder(),
                           onPressed: () =>
                               Navigator.of(context).push(MaterialPageRoute(
                             builder: (_) => FutureBuilder(
@@ -242,9 +257,11 @@ class _DashboardState extends State<Dashboard>
                                   }
                                 }),
                           )),
-                          icon: const Icon(Icons.book_rounded),
+                          child: const Icon(Icons.book_rounded),
                         ),
-                        ActionButton(
+                        FloatingActionButton.small(
+                          heroTag: null,
+                          shape: const CircleBorder(),
                           onPressed: () =>
                               Navigator.of(context).push(MaterialPageRoute(
                             builder: (_) => FutureBuilder(
@@ -260,7 +277,7 @@ class _DashboardState extends State<Dashboard>
                                   }
                                 }),
                           )),
-                          icon: const Icon(Icons.school_rounded),
+                          child: const Icon(Icons.school_rounded),
                         ),
                       ],
                     ),

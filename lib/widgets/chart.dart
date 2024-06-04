@@ -50,13 +50,13 @@ LineChartData mainData(List<double> voti, List<Color> colors) {
       verticalInterval: 1,
       getDrawingHorizontalLine: (value) {
         return const FlLine(
-          color: ChartColors.mainGridLineColor,
+          color: ChartColors.lineColor,
           strokeWidth: 1,
         );
       },
       getDrawingVerticalLine: (value) {
         return const FlLine(
-          color: ChartColors.mainGridLineColor,
+          color: ChartColors.lineColor,
           strokeWidth: 1,
         );
       },

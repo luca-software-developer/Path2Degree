@@ -904,8 +904,8 @@ class _StatisticheState extends State<Statistiche> {
                                     return Chart(
                                       voti: snapshot.data ?? [],
                                       colors: const [
-                                        ChartColors.contentColorPurple,
-                                        ChartColors.contentColorBlue,
+                                        ChartColors.chartPurple,
+                                        ChartColors.chartBlue,
                                       ],
                                     );
                                   }
@@ -942,8 +942,8 @@ class _StatisticheState extends State<Statistiche> {
                                     return Chart(
                                       voti: snapshot.data ?? [],
                                       colors: const [
-                                        ChartColors.contentColorCyan,
-                                        ChartColors.contentColorBlue,
+                                        ChartColors.chartCyan,
+                                        ChartColors.chartBlue,
                                       ],
                                     );
                                   }
@@ -980,8 +980,8 @@ class _StatisticheState extends State<Statistiche> {
                                     return Chart(
                                       voti: snapshot.data ?? [],
                                       colors: const [
-                                        ChartColors.contentColorCyan,
-                                        ChartColors.contentColorGreen,
+                                        ChartColors.chartCyan,
+                                        ChartColors.chartGreen,
                                       ],
                                     );
                                   }
@@ -1018,8 +1018,8 @@ class _StatisticheState extends State<Statistiche> {
                                     return Chart(
                                       voti: snapshot.data ?? [],
                                       colors: const [
-                                        ChartColors.contentColorYellow,
-                                        ChartColors.contentColorOrange,
+                                        ChartColors.chartYellow,
+                                        ChartColors.chartOrange,
                                       ],
                                     );
                                   }
