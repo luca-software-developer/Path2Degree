@@ -68,7 +68,7 @@ class _EditAppuntoState extends State<EditAppunto> {
                                         } else if (widget.appunti
                                             .map((appunto) => appunto.nome)
                                             .where((nomeAppunto) =>
-                                                nomeAppunto != _nome)
+                                                nomeAppunto != widget.nome)
                                             .contains(value.trim())) {
                                           return 'Esiste già un appunto con questo nome.';
                                         }

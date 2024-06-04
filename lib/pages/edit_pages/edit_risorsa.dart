@@ -203,7 +203,7 @@ class _EditRisorsaState extends State<EditRisorsa> {
                                                           diario: widget.diario)
                                                       .toMap(),
                                                   conflictAlgorithm:
-                                                      ConflictAlgorithm.replace,
+                                                      ConflictAlgorithm.ignore,
                                                 )
                                                 .then((_) =>
                                                     Navigator.of(context)
