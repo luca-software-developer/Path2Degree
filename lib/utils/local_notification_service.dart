@@ -38,7 +38,7 @@ class EsameNotificationService {
   /// Schedula una notifica per un esame.
   Future<void> scheduleExamNotification(
       String nome, DateTime dataOra, String luogo) async {
-    if (dataOra.isBefore(DateTime.now())) return;
+    if (dataOra.add(const Duration(days: -1)).isBefore(DateTime.now())) return;
     await flutterLocalNotificationsPlugin.zonedSchedule(
         nome.hashCode,
         'Esame \'$nome\'',
