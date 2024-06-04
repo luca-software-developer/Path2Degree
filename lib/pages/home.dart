@@ -73,28 +73,28 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).colorScheme.surface,
-      child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text(_widgetTitles[_selectedIndex],
-                style: Theme.of(context).textTheme.displaySmall),
-            leading: Builder(
-              builder: (context) {
-                return IconButton(
-                  icon: const Icon(Icons.menu_rounded),
-                  onPressed: () {
-                    _controller.reset();
-                    _controller.forward();
-                    Scaffold.of(context).openDrawer();
-                  },
-                );
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(_widgetTitles[_selectedIndex],
+            style: Theme.of(context).textTheme.displaySmall),
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu_rounded),
+              onPressed: () {
+                _controller.reset();
+                _controller.forward();
+                Scaffold.of(context).openDrawer();
               },
-            ),
-          ),
-          drawer: Drawer(
+            );
+          },
+        ),
+      ),
+      drawer: Container(
+        color: Theme.of(context).colorScheme.surface,
+        child: SafeArea(
+          child: Drawer(
             backgroundColor: Theme.of(context).colorScheme.surface,
             child: ListView(
               padding: EdgeInsets.zero,
@@ -233,52 +233,54 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               ],
             ),
           ),
-          body: PageView(
-            controller: _pageViewController,
-            children: _widgetOptions,
-            onPageChanged: (index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            },
-          ),
-          bottomNavigationBar: Theme(
-            data: Theme.of(context).copyWith(
-              splashColor: Colors.transparent,
-              splashFactory: NoSplash.splashFactory,
+        ),
+      ),
+      body: SafeArea(
+        child: PageView(
+          controller: _pageViewController,
+          children: _widgetOptions,
+          onPageChanged: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+        ),
+      ),
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          splashColor: Colors.transparent,
+          splashFactory: NoSplash.splashFactory,
+        ),
+        child: BottomNavigationBar(
+          elevation: 0.0,
+          type: BottomNavigationBarType.fixed,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.category_rounded),
+              label: 'Categorie',
             ),
-            child: BottomNavigationBar(
-              elevation: 0.0,
-              type: BottomNavigationBarType.fixed,
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.category_rounded),
-                  label: 'Categorie',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.area_chart_rounded),
-                  label: 'Statistiche',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home_rounded),
-                  label: 'Dashboard',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.book_rounded),
-                  label: 'Diari',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.school_rounded),
-                  label: 'Esami',
-                ),
-              ],
-              currentIndex: _selectedIndex,
-              unselectedItemColor: Theme.of(context).colorScheme.onSurface,
-              selectedItemColor: Theme.of(context).colorScheme.primary,
-              showUnselectedLabels: true,
-              onTap: _onItemTapped,
+            BottomNavigationBarItem(
+              icon: Icon(Icons.area_chart_rounded),
+              label: 'Statistiche',
             ),
-          ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_rounded),
+              label: 'Dashboard',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.book_rounded),
+              label: 'Diari',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.school_rounded),
+              label: 'Esami',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          unselectedItemColor: Theme.of(context).colorScheme.onSurface,
+          selectedItemColor: Theme.of(context).colorScheme.primary,
+          showUnselectedLabels: true,
+          onTap: _onItemTapped,
         ),
       ),
     );
