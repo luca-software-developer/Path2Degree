@@ -684,6 +684,10 @@ class _AddEsameState extends State<AddEsame> {
                                         child: const Text('Aggiungi'),
                                         onPressed: () async {
                                           Navigator.of(context).pop();
+                                          if (_nuovoDiario == null ||
+                                              _nuovoDiario!.trim().isEmpty) {
+                                            return;
+                                          }
                                           final newDiario =
                                               Diario(nome: _nuovoDiario!);
                                           Database db =
