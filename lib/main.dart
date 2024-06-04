@@ -15,7 +15,9 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   DateTime now = DateTime.now();
   DateTime today = DateTime(now.year, now.month, now.day);
-  if (!prefs.containsKey('dataPromemoria')) {
+  if (!prefs.containsKey('dataPromemoria') ||
+      DateTime.parse(prefs.getString('dataPromemoria')!)
+          .isBefore(DateTime.now())) {
     prefs.setString(
         'dataPromemoria', today.add(const Duration(days: 7)).toIso8601String());
   }
