@@ -741,7 +741,7 @@ class _EditEsameState extends State<EditEsame> {
                                             border: OutlineInputBorder(),
                                             labelText: 'Nome del diario'),
                                         onChanged: (value) {
-                                          _nuovoDiario = value;
+                                          _nuovoDiario = value.trim();
                                         },
                                       ),
                                       actions: <Widget>[
@@ -763,7 +763,7 @@ class _EditEsameState extends State<EditEsame> {
                                               'diario',
                                               newDiario.toMap(),
                                               conflictAlgorithm:
-                                                  ConflictAlgorithm.replace,
+                                                  ConflictAlgorithm.ignore,
                                             );
                                             _selectedDiario = _nuovoDiario;
                                             _diario = _selectedDiario;

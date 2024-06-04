@@ -643,7 +643,7 @@ class _AddEsameState extends State<AddEsame> {
                                             border: OutlineInputBorder(),
                                             labelText: 'Nome del diario'),
                                         onChanged: (value) {
-                                          _nuovoDiario = value;
+                                          _nuovoDiario = value.trim();
                                         },
                                       ),
                                       actions: <Widget>[
