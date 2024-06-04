@@ -445,22 +445,61 @@ class _AddEsameState extends State<AddEsame> {
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: TextFormField(
-                            validator: (value) {
-                              if (_selectedCategorie.isEmpty) {
-                                return 'Specificare almeno una categoria.';
+                          child: Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: FutureBuilder(
+                            future: Categoria.getCategorie(context),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Container();
+                              } else if (snapshot.hasError) {
+                                return Text(snapshot.error.toString());
+                              } else {
+                                return Autocomplete<String>(
+                                  optionsBuilder:
+                                      (TextEditingValue textEditingValue) {
+                                    if (textEditingValue.text.isEmpty) {
+                                      return const Iterable<String>.empty();
+                                    }
+                                    return snapshot.data!
+                                        .map((categoria) => categoria.nome)
+                                        .where((String option) {
+                                      return !_selectedCategorie
+                                              .contains(option) &&
+                                          option.contains(textEditingValue.text
+                                              .trim()
+                                              .toLowerCase());
+                                    });
+                                  },
+                                  onSelected: (String selection) {
+                                    _categoriaController.text = selection;
+                                  },
+                                  fieldViewBuilder: (context,
+                                      textEditingController,
+                                      focusNode,
+                                      onFieldSubmitted) {
+                                    return TextFormField(
+                                      validator: (value) {
+                                        if (_selectedCategorie.isEmpty) {
+                                          return 'Specificare almeno una categoria.';
+                                        }
+                                        return null;
+                                      },
+                                      onChanged: (value) => _categoriaController
+                                          .text = textEditingController.text,
+                                      focusNode: focusNode,
+                                      controller: textEditingController,
+                                      decoration: const InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: 'Categoria',
+                                      ),
+                                    );
+                                  },
+                                );
                               }
-                              return null;
-                            },
-                            controller: _categoriaController,
-                            decoration: const InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'Categoria'),
-                          ),
-                        ),
-                      ),
+                            }),
+                      )),
                       Padding(
                         padding: const EdgeInsets.only(left: 16.0),
                         child: IconButton(
@@ -520,17 +559,8 @@ class _AddEsameState extends State<AddEsame> {
                                             fontWeight: FontWeight.bold)),
                                 trailing: IconButton(
                                   icon: const Icon(Icons.delete),
-                                  onPressed: () async {
-                                    Database database =
-                                        await databaseProvider.database;
-                                    await database.delete('appartenenza',
-                                        where:
-                                            "categoria = '${_selectedCategorie[index]}'");
-                                    await database.rawDelete(
-                                        "DELETE FROM categoria AS C WHERE NOT EXISTS (SELECT * FROM appartenenza AS A WHERE A.categoria = C.nome)");
-                                    setState(() {});
-                                    _selectedCategorie.removeAt(index);
-                                  },
+                                  onPressed: () => setState(
+                                      () => _selectedCategorie.removeAt(index)),
                                 ),
                               ),
                             ),
@@ -751,7 +781,7 @@ class _AddEsameState extends State<AddEsame> {
                                       Theme.of(context).colorScheme.onSecondary,
                                   backgroundColor:
                                       Theme.of(context).colorScheme.primary),
-                              child: const Text('Aggiungi esame')),
+                              child: const Text('Salva')),
                         ),
                       )
                     ],

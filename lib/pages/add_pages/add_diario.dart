@@ -120,7 +120,7 @@ class _AddDiarioState extends State<AddDiario> {
                                       Theme.of(context).colorScheme.onSecondary,
                                   backgroundColor:
                                       Theme.of(context).colorScheme.primary),
-                              child: const Text('Aggiungi diario')),
+                              child: const Text('Salva')),
                         ),
                       )
                     ],

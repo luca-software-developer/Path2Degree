@@ -125,7 +125,7 @@ class _AddAppuntoState extends State<AddAppunto> {
                                       Theme.of(context).colorScheme.onSecondary,
                                   backgroundColor:
                                       Theme.of(context).colorScheme.primary),
-                              child: const Text('Aggiungi appunto')),
+                              child: const Text('Salva')),
                         ),
                       )
                     ],

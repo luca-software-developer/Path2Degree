@@ -504,18 +504,71 @@ class _EditEsameState extends State<EditEsame> {
                                 Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.only(bottom: 8.0),
-                                    child: TextFormField(
-                                      validator: (value) {
-                                        if (_selectedCategorie.isEmpty) {
-                                          return 'Specificare almeno una categoria.';
-                                        }
-                                        return null;
-                                      },
-                                      controller: _categoriaController,
-                                      decoration: const InputDecoration(
-                                          border: OutlineInputBorder(),
-                                          labelText: 'Categoria'),
-                                    ),
+                                    child: FutureBuilder(
+                                        future: Categoria.getCategorie(context),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return Container();
+                                          } else if (snapshot.hasError) {
+                                            return Text(
+                                                snapshot.error.toString());
+                                          } else {
+                                            return Autocomplete<String>(
+                                              optionsBuilder: (TextEditingValue
+                                                  textEditingValue) {
+                                                if (textEditingValue
+                                                    .text.isEmpty) {
+                                                  return const Iterable<
+                                                      String>.empty();
+                                                }
+                                                return snapshot.data!
+                                                    .map((categoria) =>
+                                                        categoria.nome)
+                                                    .where((String option) {
+                                                  return !_selectedCategorie
+                                                          .contains(option) &&
+                                                      option.contains(
+                                                          textEditingValue.text
+                                                              .trim()
+                                                              .toLowerCase());
+                                                });
+                                              },
+                                              onSelected: (String selection) {
+                                                _categoriaController.text =
+                                                    selection;
+                                              },
+                                              fieldViewBuilder: (context,
+                                                  textEditingController,
+                                                  focusNode,
+                                                  onFieldSubmitted) {
+                                                return TextFormField(
+                                                  validator: (value) {
+                                                    if (_selectedCategorie
+                                                        .isEmpty) {
+                                                      return 'Specificare almeno una categoria.';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  onChanged: (value) =>
+                                                      _categoriaController
+                                                              .text =
+                                                          textEditingController
+                                                              .text,
+                                                  focusNode: focusNode,
+                                                  controller:
+                                                      textEditingController,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    border:
+                                                        OutlineInputBorder(),
+                                                    labelText: 'Categoria',
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          }
+                                        }),
                                   ),
                                 ),
                                 Padding(
@@ -524,7 +577,6 @@ class _EditEsameState extends State<EditEsame> {
                                       onPressed: () async {
                                         final scrollPosition =
                                             _scrollController.offset;
-
                                         String nomeCategoria =
                                             _categoriaController.text;
                                         nomeCategoria =
@@ -614,7 +666,7 @@ class _EditEsameState extends State<EditEsame> {
                                               await database.delete(
                                                   'appartenenza',
                                                   where:
-                                                      "categoria = '${_selectedCategorie[index]}'");
+                                                      "esame = '${widget.nome}' AND categoria = '${_selectedCategorie[index]}'");
                                               await database.rawDelete(
                                                   "DELETE FROM categoria AS C WHERE NOT EXISTS (SELECT * FROM appartenenza AS A WHERE A.categoria = C.nome)");
                                               setState(() {});
