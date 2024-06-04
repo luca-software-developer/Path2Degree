@@ -165,7 +165,7 @@ class _EditEsameState extends State<EditEsame> {
                                   }
                                   return null;
                                 },
-                                onSaved: (newValue) => _nome = newValue,
+                                onSaved: (newValue) => _nome = newValue!.trim(),
                                 decoration: const InputDecoration(
                                     border: OutlineInputBorder(),
                                     labelText: 'Nome'),
@@ -191,7 +191,7 @@ class _EditEsameState extends State<EditEsame> {
                                     return null;
                                   },
                                   onSaved: (newValue) =>
-                                      _corsoDiStudi = newValue,
+                                      _corsoDiStudi = newValue!.trim(),
                                   decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       labelText: 'Corso di Studi'),
@@ -324,7 +324,8 @@ class _EditEsameState extends State<EditEsame> {
                                       }
                                       return null;
                                     },
-                                    onSaved: (newValue) => _luogo = newValue,
+                                    onSaved: (newValue) =>
+                                        _luogo = newValue!.trim(),
                                     decoration: const InputDecoration(
                                         border: OutlineInputBorder(),
                                         labelText: 'Luogo'),
@@ -407,7 +408,8 @@ class _EditEsameState extends State<EditEsame> {
                                     }
                                     return null;
                                   },
-                                  onSaved: (newValue) => _docente = newValue,
+                                  onSaved: (newValue) =>
+                                      _docente = newValue!.trim(),
                                   decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
                                       labelText: 'Docente'),
