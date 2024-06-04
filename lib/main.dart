@@ -26,12 +26,11 @@ void main() async {
 }
 
 class Path2Degree extends StatelessWidget {
-  final AdaptiveThemeMode? savedThemeMode;
-
   Path2Degree({super.key, this.savedThemeMode});
 
   static const String title = 'Path2Degree';
 
+  final AdaptiveThemeMode? savedThemeMode;
   final TextTheme textTheme = TextTheme(
       displayLarge: GoogleFonts.caveat(),
       displayMedium: GoogleFonts.caveat(fontSize: 40),
