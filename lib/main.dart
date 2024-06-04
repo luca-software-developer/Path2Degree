@@ -29,7 +29,6 @@ class Path2Degree extends StatelessWidget {
   Path2Degree({super.key, this.savedThemeMode});
 
   static const String title = 'Path2Degree';
-  static const String slogan = 'Organize your exams';
 
   final TextTheme textTheme = TextTheme(
       displayLarge: GoogleFonts.caveat(),

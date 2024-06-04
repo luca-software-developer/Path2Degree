@@ -668,7 +668,10 @@ class _EditEsameState extends State<EditEsame> {
                                                   where:
                                                       "esame = '${widget.nome}' AND categoria = '${_selectedCategorie[index]}'");
                                               await database.rawDelete(
-                                                  "DELETE FROM categoria AS C WHERE NOT EXISTS (SELECT * FROM appartenenza AS A WHERE A.categoria = C.nome)");
+                                                  "DELETE FROM categoria AS C "
+                                                  "WHERE NOT EXISTS ("
+                                                  "SELECT * FROM appartenenza AS A "
+                                                  "WHERE A.categoria = C.nome)");
                                               setState(() {});
                                               _selectedCategorie
                                                   .removeAt(index);

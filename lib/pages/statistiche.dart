@@ -894,8 +894,6 @@ class _StatisticheState extends State<Statistiche> {
                               ),
                             ),
 
-                            //
-
                             FutureBuilder(
                                 future:
                                     _getEvoluzioneVotiPerCategoria(_categoria!),
@@ -912,8 +910,6 @@ class _StatisticheState extends State<Statistiche> {
                                     );
                                   }
                                 }),
-
-                            //
 
                             Padding(
                               padding:
@@ -936,8 +932,6 @@ class _StatisticheState extends State<Statistiche> {
                               ),
                             ),
 
-                            //
-
                             FutureBuilder(
                                 future: _getEvoluzioneMediaPerCategoria(
                                     _categoria!),
@@ -954,8 +948,6 @@ class _StatisticheState extends State<Statistiche> {
                                     );
                                   }
                                 }),
-
-                            //
 
                             Padding(
                               padding:
@@ -978,8 +970,6 @@ class _StatisticheState extends State<Statistiche> {
                               ),
                             ),
 
-                            //
-
                             FutureBuilder(
                                 future: _getEvoluzioneVotoMassimoPerCategoria(
                                     _categoria!),
@@ -996,8 +986,6 @@ class _StatisticheState extends State<Statistiche> {
                                     );
                                   }
                                 }),
-
-                            //
 
                             Padding(
                               padding:
@@ -1019,8 +1007,6 @@ class _StatisticheState extends State<Statistiche> {
                                         Theme.of(context).textTheme.bodyMedium),
                               ),
                             ),
-
-                            //
 
                             FutureBuilder(
                                 future: _getEvoluzioneVotoMinimoPerCategoria(

@@ -51,7 +51,11 @@ class _InformazioniState extends State<Informazioni> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  "Path2Degree è un’applicazione mobile multipiattaforma per la gestione degli esami universitari. L’app consente di elencare gli esami universitari nella propria carriera, categorizzarli, inserire note, promemoria e monitorare i progressi.",
+                  "Path2Degree è un’applicazione mobile multipiattaforma "
+                  "per la gestione degli esami universitari. "
+                  "L’app consente di elencare gli esami universitari "
+                  "nella propria carriera, categorizzarli, inserire note, "
+                  "promemoria e monitorare i progressi.",
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontStyle: FontStyle.italic,
                         color: Theme.of(context)
